@@ -80,7 +80,7 @@
   </div>
 </template>
 <script>
-import modalMixin from '@/util/modalMixin.js'
+import modalMixin from '@/utils/modalMixin.js'
 
 export default {
   props: {

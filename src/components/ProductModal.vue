@@ -211,8 +211,8 @@
   </div>
 </template>
 <script>
-import modalMixin from '@/util/modalMixin'
-import productAdminAPI from '@/api/admin/products.js'
+import modalMixin from '@/utils/modalMixin'
+import productAdminAPI from '@/apis/admin/products.js'
 export default {
   props: {
     product: {
