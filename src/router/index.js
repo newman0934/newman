@@ -5,6 +5,10 @@ import Product from '@/views/product'
 import Cart from '@/views/cart'
 import Checkout from '@/views/checkout'
 import Contact from '@/views/contact'
+import Admin from '@/views/admin/admin'
+import AdminProducts from '@/views/admin/products'
+import AdminCoupon from '@/views/admin/coupons'
+import AdminOrder from '@/views/admin/orders'
 
 const routes = [
   {
@@ -36,6 +40,25 @@ const routes = [
     path: '/contact',
     name: 'Contact',
     component: Contact
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Admin,
+    children: [
+      {
+        path: '',
+        component: AdminProducts
+      },
+      {
+        path: 'coupon',
+        component: AdminCoupon
+      },
+      {
+        path: 'order',
+        component: AdminOrder
+      }
+    ]
   }
 ]
 
