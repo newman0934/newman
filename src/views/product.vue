@@ -1,31 +1,66 @@
 <template>
   <div>
     <Header></Header>
-    <div class="container">
-      <div class="row mb-3">
-        <div class="col-6">
-          <img :src="product.imageUrl" alt />
+    <div class="container my-15">
+      <div class="row pt-10">
+        <div class="col-md-6 mb-15">
+          <div
+            id="imagesList"
+            class="carousel slide carousel-fade"
+            data-bs-ride="carousel"
+          >
+            <div class="carousel-inner">
+              <div
+                class="carousel-item"
+                :class="{ active: i == 0}"
+                v-for="(image, i) of product.imagesUrl"
+                :key="i"
+              >
+                <img :src="image" class="d-block w-100" />
+              </div>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#imagesList"
+              data-bs-slide="prev"
+            >
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#imagesList"
+              data-bs-slide="next"
+            >
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
         </div>
-        <div class="col-6">
-          <h2>產品名稱：{{ product.title }}</h2>
-          <h4>產品說明：{{ product.content }}</h4>
-          <p>產品敘述：{{ product.description }}</p>
-          <p>原價：{{ product.origin_price }}</p>
-          <p>售價：{{ product.price }}</p>
-          <input type="number" min="1" v-model.number="qty" />
-          <button type="button" @click="addToCart(product.id, qty)">加入購物車</button>
+        <div class="col-md-6">
+          <h2>{{ product.title }}</h2>
+          <small>{{ product.description }}</small>
+          <h4 class="mt-10 mb-5">產品說明</h4>
+          <ul class="" v-html="product.content"></ul>
+          <p class="lh-lg text-secondary text-decoration-line-through">原價：{{ product.origin_price }}</p>
+          <h5 class="mb-10 text-primary">售價：{{ product.price }}</h5>
+<div class="input-group">
+            <input type="number" class="form-control" min="1" v-model.number="qty" />
+          <button type="button" class="btn btn-outline-primary" @click="addToCart(product.id, qty)">加入購物車</button>
+</div>
         </div>
-      </div>
-      <div class="row">
-        <img v-for="(img, i) of product.imagesUrl" :src="img" :key="i" alt="" class="col-4 mb-3">
       </div>
     </div>
+    <Footer></Footer>
   </div>
 </template>
 <script>
 import productAPI from '../apis/products'
 import cartAPI from '../apis/cart'
 import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 export default {
   data () {
@@ -67,7 +102,8 @@ export default {
     this.fetchProduct(id)
   },
   components: {
-    Header
+    Header,
+    Footer
   }
 }
 </script>

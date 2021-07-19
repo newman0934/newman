@@ -10,8 +10,10 @@
   "dependencies": {
     "@vee-validate/i18n": "^4.1.20",
     "@vee-validate/rules": "^4.1.20",
+    "aos": "^3.0.0-beta.6",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
+    "bootstrap-icons": "^1.5.0",
     "core-js": "^3.15.2",
     "sweetalert2": "^11.0.18",
     "vee-validate": "^4.4.5",

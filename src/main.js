@@ -2,11 +2,30 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import './assets/scss/all.scss'
+import 'bootstrap/dist/js/bootstrap.bundle'
 import { date, currency } from './utils/filters'
 import { Field, Form, ErrorMessage, defineRule, configure } from 'vee-validate'
 import { required, email, min, max, numeric } from '@vee-validate/rules'
 import { localize, setLocale } from '@vee-validate/i18n'
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
+import AOS from 'aos'
+import 'aos/src/sass/aos.scss'
+import axios from 'axios'
+
+axios.interceptors.request.use(
+  config => {
+    // 從 localStorage 將 token 取出
+    const token = localStorage.getItem('token')
+    // 如果 token 存在的話，則帶入到 headers 當中
+    if (token) {
+      config.headers.Authorization = token
+    }
+    return config
+  },
+  err => Promise.reject(err)
+)
+
+AOS.init()
 
 defineRule('required', required)
 defineRule('email', email)
@@ -33,6 +52,7 @@ vm.config.globalProperties.$filters = {
 }
 
 vm.use(router)
+vm.use(AOS)
 vm.component('v-form', Form)
 vm.component('v-field', Field)
 vm.component('error-message', ErrorMessage)

@@ -1,4 +1,13 @@
 img{
-  min-width: 100%;
+  max-width: 100%;
   height: auto;
+}
+
+ul{
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.img-object-cover{
+  object-fit: cover;
 }

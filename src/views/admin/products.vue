@@ -69,7 +69,6 @@ export default {
     async fetchProducts (page = 1) {
       try {
         const { data } = await adminProductsAPI.getAdminProducts(page)
-        console.log(data)
         this.products = data.products
         this.pagination = data.pagination
       } catch (error) {
@@ -79,7 +78,6 @@ export default {
     async delProduct () {
       try {
         const { data } = await adminProductsAPI.deleteAdminProduct(this.tempProduct.id)
-        console.log(data)
         if (!data.success) {
           throw new Error('刪除商品失敗')
         }

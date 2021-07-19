@@ -1,36 +1,27 @@
 <template>
   <div>
     <Header></Header>
-    <div class="container">
-      <div class="text-end">
+    <div v-if="!hasProduct" class="container my-15 py-15">
+      <h1>喔喔！您現在的購物車沒有東西喔！</h1>
+      <h2>請商品列表挑選您喜愛的商品吧！</h2>
+      <router-link to="/products" class="btn btn-lg btn-primary">前往購物</router-link>
+    </div>
+    <div v-else class="container my-15 py-15">
+      <div class="text-end mb-5">
         <button class="btn btn-outline-danger" type="button" @click="deleteCarts">清空購物車</button>
       </div>
-      <table class="table align-middle">
+      <table class="table table-hover table-striped align-middle">
         <thead>
           <tr>
-            <th></th>
             <th>品名</th>
-            <th style="width: 150px">數量/單位</th>
+            <th style="width: 150px">數量</th>
             <th>單價</th>
+            <th>刪除商品</th>
           </tr>
         </thead>
         <tbody>
           <template v-if="cart.carts">
             <tr v-for="cartItem of cart.carts" :key="cartItem.id">
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger btn-sm"
-                  @click="deleteCartItem(cartItem.id)"
-                  :disabled="loadingStatus.loadingItem === cartItem.id"
-                >
-                  <i
-                    class="fas fa-spinner fa-pulse"
-                    v-if="loadingStatus.loadingItem === cartItem.id"
-                  ></i>
-                  x
-                </button>
-              </td>
               <td>
                 {{ cartItem.product.title }}
                 <div class="text-success" v-if="cartItem.coupon">已套用優惠券</div>
@@ -44,19 +35,22 @@
                       class="form-control"
                       v-model.number="cartItem.qty"
                       @blur="updateCartQty(cartItem)"
-                      :disabled="loadingStatus.loadingItem === cartItem.id"
                     />
-                    <span class="input-group-text" id="basic-addon2">
-                      {{
-                      cartItem.product.unit
-                      }}
-                    </span>
                   </div>
                 </div>
               </td>
-              <td class="text-end">
+              <td>
                 <small v-if="cart.final_total !== cart.total" class="text-success">折扣價：</small>
                 {{ cartItem.final_total }}
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  @click="deleteCartItem(cartItem.id)"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
               </td>
             </tr>
           </template>
@@ -72,21 +66,10 @@
           </tr>
         </tfoot>
       </table>
-      <div class="input-group mb-3 input-group-sm">
-        <input
-          type="text"
-          class="form-control"
-          v-model="coupon_code"
-          placeholder="請輸入優惠碼"
-        />
+      <div class="input-group coupon-input-group mb-15 input-group-sm ms-auto">
+        <input type="text" class="form-control" v-model="coupon_code" placeholder="請輸入優惠碼" />
         <div class="input-group-append">
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            @click="addCouponCode"
-          >
-            套用優惠碼
-          </button>
+          <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">套用優惠碼</button>
         </div>
       </div>
 
@@ -156,25 +139,24 @@
           <textarea id="message" class="form-control" cols="30" rows="10" v-model="order.message"></textarea>
         </div>
         <div class="text-end">
-          <button type="submit" class="btn btn-danger">送出訂單</button>
+          <button type="submit" class="btn btn-primary">送出訂單</button>
         </div>
       </v-form>
     </div>
+    <Footer></Footer>
   </div>
 </template>
 <script>
 import cartAPI from '../apis/cart'
 import Header from '../components/Header'
+import Footer from '../components/Footer'
 import orderAPI from '../apis/orders'
 import couponAPI from '../apis/coupons'
-
+import { Toast } from '../utils/sweetAlert'
 export default {
   data () {
     return {
       cart: {},
-      loadingStatus: {
-        loadingItem: ''
-      },
       order: {
         user: {
           email: '',
@@ -184,7 +166,8 @@ export default {
         },
         message: ''
       },
-      coupon_code: ''
+      coupon_code: '',
+      hasProduct: false
     }
   },
   methods: {
@@ -195,8 +178,12 @@ export default {
           throw new Error('取得購物車失敗')
         }
         this.cart = data.data
+        this.hasProduct = !!data?.data?.carts[0]?.id
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async addOder () {
@@ -209,7 +196,10 @@ export default {
         this.$refs.form.resetForm()
         this.$router.push(`/checkout/${data.orderId}`)
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async deleteCarts () {
@@ -218,10 +208,16 @@ export default {
         if (!data.success) {
           throw new Error('刪除購物車失敗')
         }
-        window.alert('刪除購物車成功')
+        Toast.fire({
+          icon: 'success',
+          title: '刪除購物車成功'
+        })
         this.fetchCarts()
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async deleteCartItem (id) {
@@ -230,10 +226,16 @@ export default {
         if (!data.success) {
           throw new Error('刪除購物車品項失敗')
         }
-        window.alert('刪除成功')
+        Toast.fire({
+          icon: 'success',
+          title: '刪除商品成功'
+        })
         this.fetchCarts()
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async updateCartQty (item) {
@@ -247,9 +249,11 @@ export default {
           throw new Error('更改購物車商品數量失敗')
         }
         this.fetchCarts()
-        console.log(item)
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async addCouponCode () {
@@ -261,7 +265,10 @@ export default {
         }
         this.fetchCarts()
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     }
   },
@@ -269,7 +276,16 @@ export default {
     this.fetchCarts()
   },
   components: {
-    Header
+    Header,
+    Footer
   }
 }
 </script>
+<style lang="scss" scoped>
+.coupon-input-group {
+  width: 25%;
+  @include mobile{
+    width: 100%;
+  }
+}
+</style>

@@ -1,8 +1,10 @@
 <template>
   <div class="my-5 row justify-content-center">
     <Header></Header>
-    <form class="col-md-6" @submit.prevent="payOrder">
-      <table class="table align-middle">
+    <form class="col-md-6 my-15 py-15" @submit.prevent="payOrder">
+      <h2 class="text-primary mb-10">感謝您的購買，以下是您購買的資訊</h2>
+      <h3 class="mb-5">訂單資訊</h3>
+      <table class="table table-hover table-striped align-middle mb-10">
         <thead>
           <th>品名</th>
           <th>數量</th>
@@ -11,8 +13,8 @@
         <tbody>
           <tr v-for="item in order.products" :key="item.id">
             <td>{{ item.product.title }}</td>
-            <td>{{ item.qty }}/{{ item.product.unit }}</td>
-            <td class="text-end">{{ item.final_total }}</td>
+            <td>{{ item.qty }}</td>
+            <td>{{ item.final_total }}</td>
           </tr>
         </tbody>
         <tfoot>
@@ -22,7 +24,7 @@
           </tr>
         </tfoot>
       </table>
-
+      <h3 class="mb-5">購買人資訊</h3>
       <table class="table">
         <tbody>
           <tr>
@@ -54,11 +56,13 @@
         <button class="btn btn-danger">確認付款去</button>
       </div>
     </form>
+    <Footer></Footer>
   </div>
 </template>
 <script>
 import orderAPI from '@/apis/orders.js'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 export default {
   data () {
     return {
@@ -98,7 +102,8 @@ export default {
     this.fetchOrder()
   },
   components: {
-    Header
+    Header,
+    Footer
   }
 }
 </script>

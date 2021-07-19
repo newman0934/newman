@@ -9,6 +9,16 @@ import Admin from '@/views/admin/admin'
 import AdminProducts from '@/views/admin/products'
 import AdminCoupon from '@/views/admin/coupons'
 import AdminOrder from '@/views/admin/orders'
+import Login from '@/views/login'
+
+const token = localStorage.getItem('token')
+const hasLogin = (to, from, next) => {
+  if (!token) {
+    next('/login')
+  } else {
+    next()
+  }
+}
 
 const routes = [
   {
@@ -42,9 +52,15 @@ const routes = [
     component: Contact
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: Admin,
+    beforeEnter: hasLogin,
     children: [
       {
         path: '',
