@@ -61,12 +61,14 @@ import productAPI from '../apis/products'
 import cartAPI from '../apis/cart'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { Toast } from '../utils/sweetAlert'
 
 export default {
   data () {
     return {
       product: {},
-      qty: 1
+      qty: 1,
+      isLoading: false
     }
   },
   methods: {
@@ -78,11 +80,15 @@ export default {
         }
         this.product = data.product
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async addToCart (id, qty = 1) {
       try {
+        this.isLoading = true
         const cartItem = {
           product_id: id,
           qty
@@ -91,9 +97,17 @@ export default {
         if (!data.success) {
           throw new Error('加入購物車失敗')
         }
-        window.alert('加入購物車成功')
+        Toast.fire({
+          icon: 'success',
+          title: '加入購物車成功'
+        })
+        this.isLoading = false
       } catch (error) {
-        window.alert(error.message)
+        this.isLoading = false
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     }
   },

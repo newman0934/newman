@@ -68,6 +68,7 @@ import adminOrdersAPI from '@/apis/admin/orders.js'
 import DelModal from '@/components/DelModal.vue'
 import OrderModal from '@/components/OrderModal.vue'
 import Pagination from '@/components/Pagination.vue'
+import { Toast } from '@/utils/sweetAlert'
 
 export default {
   data () {
@@ -89,7 +90,10 @@ export default {
         this.orders = data.orders
         this.pagination = data.pagination
       } catch (error) {
-        Window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async delOrder () {
@@ -100,10 +104,17 @@ export default {
         if (!data.success) {
           throw new Error('刪除訂單失敗')
         }
+        Toast.fire({
+          icon: 'success',
+          title: '刪除訂單成功'
+        })
         this.$refs.delModal.hideModal()
         this.fetchOrders()
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async updatePaid (item) {
@@ -116,11 +127,18 @@ export default {
         if (!data.success) {
           throw new Error('修改訂單失敗')
         }
+        Toast.fire({
+          icon: 'success',
+          title: '修改訂單成功'
+        })
         this.isLoading = false
         this.$refs.orderModal.hideModal()
         this.fetchOrders()
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     openDelOrderModal (item) {

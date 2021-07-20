@@ -53,7 +53,10 @@
         </tbody>
       </table>
       <div class="text-end" v-if="order.is_paid === false">
-        <button class="btn btn-danger">確認付款去</button>
+        <button class="btn btn-danger" :disabled="isLoading">確認付款去</button>
+      </div>
+      <div class="text-center">
+        <router-link to="/products" class="btn btn-primary">回到產品列表</router-link>
       </div>
     </form>
     <Footer></Footer>
@@ -63,13 +66,15 @@
 import orderAPI from '@/apis/orders.js'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { Toast } from '@/utils/sweetAlert'
 export default {
   data () {
     return {
       order: {
         user: {}
       },
-      orderId: ''
+      orderId: '',
+      isLoading: false
     }
   },
   methods: {
@@ -79,21 +84,33 @@ export default {
         if (!data.success) {
           throw new Error('取得訂單失敗')
         }
-        console.log(data)
         this.order = data.order
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async payOrder () {
       try {
+        this.isLoading = true
         const { data } = await orderAPI.payOrder(this.orderId)
         if (!data.success) {
           throw new Error('付款失敗')
         }
+        Toast.fire({
+          icon: 'success',
+          title: '付款成功'
+        })
+        this.isLoading = false
         this.fetchOrder()
       } catch (error) {
-        window.alert(error.message)
+        this.isLoading = false
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     }
   },

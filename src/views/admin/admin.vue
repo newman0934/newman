@@ -1,12 +1,18 @@
 <template>
-  <div>
-    <nav class="my-5 text-center">
-      <router-link to="/admin" class="mx-3">商品列表</router-link>
-      <router-link to="/admin/order" class="mx-3">訂單</router-link>
-      <router-link to="/admin/coupon" class="mx-3">優惠券</router-link>
-    </nav>
+  <nav class="container">
+    <ul class="nav nav-tabs my-5 list-unstyled">
+      <li class="nav-item">
+        <router-link to="/admin" class="nav-link mx-3">商品列表</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/admin/order" class="nav-link mx-3">訂單</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/admin/coupon" class="nav-link mx-3">優惠券</router-link>
+      </li>
+    </ul>
     <router-view></router-view>
-  </div>
+  </nav>
 </template>
 <script>
 import loginAPI from '@/apis/login'

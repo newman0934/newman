@@ -7,8 +7,8 @@ export default {
   postAdminCoupon (item) {
     return axios.post(`${process.env.VUE_APP_ADMIN_URL}/coupon`, { data: item })
   },
-  putAdminCoupon (id) {
-    return axios.put(`${process.env.VUE_APP_ADMIN_URL}/coupon/${id}`)
+  putAdminCoupon (id, data) {
+    return axios.put(`${process.env.VUE_APP_ADMIN_URL}/coupon/${id}`, { data })
   },
   deleteAdminCoupon (id) {
     return axios.delete(`${process.env.VUE_APP_ADMIN_URL}/coupon/${id}`)

@@ -8,7 +8,7 @@
     </div>
     <div v-else class="container my-15 py-15">
       <div class="text-end mb-5">
-        <button class="btn btn-outline-danger" type="button" @click="deleteCarts">清空購物車</button>
+        <button class="btn btn-outline-danger" type="button" :disabled="isLoading" @click="deleteCarts">清空購物車</button>
       </div>
       <table class="table table-hover table-striped align-middle">
         <thead>
@@ -33,6 +33,7 @@
                       min="1"
                       type="number"
                       class="form-control"
+                      :disabled="isLoading"
                       v-model.number="cartItem.qty"
                       @blur="updateCartQty(cartItem)"
                     />
@@ -40,12 +41,13 @@
                 </div>
               </td>
               <td>
-                <small v-if="cart.final_total !== cart.total" class="text-success">折扣價：</small>
+                <small v-if="cart.final_total !== cart.total" class="text-primary">折扣價：</small>
                 {{ cartItem.final_total }}
               </td>
               <td>
                 <button
                   type="button"
+                  :disabled="isLoading"
                   class="btn btn-outline-danger btn-sm"
                   @click="deleteCartItem(cartItem.id)"
                 >
@@ -61,15 +63,15 @@
             <td class="text-end">{{ cart.total }}</td>
           </tr>
           <tr v-if="cart.final_total !== cart.total">
-            <td colspan="3" class="text-end text-success">折扣價</td>
-            <td class="text-end text-success">{{ cart.final_total }}</td>
+            <td colspan="3" class="text-end text-primary">折扣價</td>
+            <td class="text-end text-primary">{{ cart.final_total }}</td>
           </tr>
         </tfoot>
       </table>
       <div class="input-group coupon-input-group mb-15 input-group-sm ms-auto">
         <input type="text" class="form-control" v-model="coupon_code" placeholder="請輸入優惠碼" />
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">套用優惠碼</button>
+          <button class="btn btn-outline-secondary" type="button" @click="addCouponCode" :disabled="isLoading">套用優惠碼</button>
         </div>
       </div>
 
@@ -139,7 +141,7 @@
           <textarea id="message" class="form-control" cols="30" rows="10" v-model="order.message"></textarea>
         </div>
         <div class="text-end">
-          <button type="submit" class="btn btn-primary">送出訂單</button>
+          <button type="submit" class="btn btn-primary" :disabled="isLoading">送出訂單</button>
         </div>
       </v-form>
     </div>
@@ -167,7 +169,8 @@ export default {
         message: ''
       },
       coupon_code: '',
-      hasProduct: false
+      hasProduct: false,
+      isLoading: false
     }
   },
   methods: {
@@ -188,14 +191,17 @@ export default {
     },
     async addOder () {
       try {
+        this.isLoading = true
         const order = this.order
         const { data } = await orderAPI.postOder(order)
         if (!data.success) {
           throw new Error('送出訂單失敗')
         }
         this.$refs.form.resetForm()
+        this.isLoading = false
         this.$router.push(`/checkout/${data.orderId}`)
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -204,6 +210,7 @@ export default {
     },
     async deleteCarts () {
       try {
+        this.isLoading = true
         const { data } = await cartAPI.deleteCarts()
         if (!data.success) {
           throw new Error('刪除購物車失敗')
@@ -212,8 +219,10 @@ export default {
           icon: 'success',
           title: '刪除購物車成功'
         })
+        this.isLoading = false
         this.fetchCarts()
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -222,6 +231,7 @@ export default {
     },
     async deleteCartItem (id) {
       try {
+        this.isLoading = true
         const { data } = await cartAPI.deleteCart(id)
         if (!data.success) {
           throw new Error('刪除購物車品項失敗')
@@ -230,8 +240,10 @@ export default {
           icon: 'success',
           title: '刪除商品成功'
         })
+        this.isLoading = false
         this.fetchCarts()
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -240,6 +252,7 @@ export default {
     },
     async updateCartQty (item) {
       try {
+        this.isLoading = true
         const cartItem = {
           product_id: item.product_id,
           qty: item.qty
@@ -248,8 +261,10 @@ export default {
         if (!data.success) {
           throw new Error('更改購物車商品數量失敗')
         }
+        this.isLoading = false
         this.fetchCarts()
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -258,13 +273,15 @@ export default {
     },
     async addCouponCode () {
       try {
+        this.isLoading = true
         const { data } = await couponAPI.postCoupon({ code: this.coupon_code })
-        console.log(data)
         if (!data.success) {
           throw new Error('加入優惠券失敗')
         }
+        this.isLoading = false
         this.fetchCarts()
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: error.message

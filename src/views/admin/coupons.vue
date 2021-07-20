@@ -44,6 +44,7 @@ import adminCouponAPI from '@/apis/admin/coupons'
 import Couponmodal from '@/components/CouponModal'
 import DelModal from '@/components/DelModal'
 import Pagination from '@/components/Pagination'
+import { Toast } from '@/utils/sweetAlert'
 export default {
   data () {
     return {
@@ -68,7 +69,10 @@ export default {
         this.coupons = data.coupons
         this.pagination = data.pagination
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async updateCoupon (tempCoupon) {
@@ -78,18 +82,30 @@ export default {
           if (!data.success) {
             throw new Error('新增優惠券失敗')
           }
+          Toast.fire({
+            icon: 'success',
+            title: '新增優惠券成功'
+          })
           this.fetchCoupons()
           this.$refs.couponModal.hideModal()
         } else {
-          const { data } = await adminCouponAPI.putAdminCoupon(this.tempCoupon.id)
+          const { data } = await adminCouponAPI.putAdminCoupon(this.tempCoupon.id, this.tempCoupon)
+          console.log(data)
           if (!data.success) {
             throw new Error('更改優惠券失敗')
           }
+          Toast.fire({
+            icon: 'success',
+            title: '修改優惠券成功'
+          })
           this.fetchCoupons()
           this.$refs.couponModal.hideModal()
         }
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async deleteCoupon () {
@@ -98,10 +114,17 @@ export default {
         if (!data.success) {
           throw new Error('刪除優惠券失敗')
         }
+        Toast.fire({
+          icon: 'success',
+          title: '刪除優惠券成功'
+        })
         this.fetchCoupons()
         this.$refs.delModal.hideModal()
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     openCouponModal (isNew, item) {

@@ -39,6 +39,7 @@
               class="btn btn-lg btn-primary w-100 mt-3"
               type="submit"
               @click.prevent="login()"
+              :disabled="isLoading"
             >登入</button>
           </v-form>
         </div>
@@ -57,12 +58,14 @@ export default {
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      isLoading: false
     }
   },
   methods: {
     async login () {
       try {
+        this.isLoading = true
         if (!this.email || !this.email) {
           throw new Error('請輸入帳密')
         }
@@ -75,8 +78,10 @@ export default {
           throw new Error('無法登入')
         }
         localStorage.setItem('token', data.token)
+        this.isLoading = false
         this.$router.replace('/admin')
       } catch (err) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: err.message

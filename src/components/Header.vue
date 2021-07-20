@@ -19,7 +19,7 @@
             <router-link class="nav-link text-white" to="/products">商品列表</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" to="/cart">購物車</router-link>
+            <router-link class="nav-link text-white" to="/cart">購物車<span v-if="cartLength" class="bg-danger py-1 px-2 rounded-circle ms-1">{{cartLength}}</span></router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link text-white" to="/login">登入</router-link>
@@ -29,6 +29,37 @@
     </div>
   </nav>
 </template>
+<script>
+import cartAPI from '../apis/cart'
+import { Toast } from '../utils/sweetAlert'
+export default {
+  data () {
+    return {
+      cartLength: 0
+    }
+  },
+  methods: {
+    async fetchCarts () {
+      try {
+        const { data } = await cartAPI.getCart()
+        if (!data.success) {
+          throw new Error('取得購物車數量失敗')
+        }
+        console.log(data)
+        this.cartLength = data.data.carts.length
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
+      }
+    }
+  },
+  created () {
+    this.fetchCarts()
+  }
+}
+</script>
 <style lang="scss">
 .navbar {
   background: rgba(0, 0, 0, 0.5);

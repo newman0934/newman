@@ -54,6 +54,7 @@
                       type="button"
                       class="btn btn-secondary"
                       @click="addToCart(product.id)"
+                      :disabled="isLoading"
                     >加入購物車</button>
                   </div>
                 </div>
@@ -78,7 +79,8 @@ export default {
       products: [],
       selectCategory: '',
       productsLength: 0,
-      selectProducts: []
+      selectProducts: [],
+      isLoading: false
     }
   },
   computed: {
@@ -97,11 +99,15 @@ export default {
         }
         this.products = data.products
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async addToCart (id, qty = 1) {
       try {
+        this.isLoading = true
         const cartItem = {
           product_id: id,
           qty
@@ -114,10 +120,12 @@ export default {
           icon: 'success',
           title: '成功加入購物車'
         })
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
-          title: '加入購物車失敗'
+          title: error.message
         })
       }
     },
@@ -146,6 +154,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.card {
+  transition: all 0.5s;
+  &:hover {
+    transform: translateY(-10px);
+  }
+}
+
 .card-img-top {
   width: 100%;
   height: 50vh;

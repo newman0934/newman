@@ -4,7 +4,6 @@ import Products from '@/views/products'
 import Product from '@/views/product'
 import Cart from '@/views/cart'
 import Checkout from '@/views/checkout'
-import Contact from '@/views/contact'
 import Admin from '@/views/admin/admin'
 import AdminProducts from '@/views/admin/products'
 import AdminCoupon from '@/views/admin/coupons'
@@ -47,11 +46,6 @@ const routes = [
     component: Checkout
   },
   {
-    path: '/contact',
-    name: 'Contact',
-    component: Contact
-  },
-  {
     path: '/login',
     name: 'Login',
     component: Login
@@ -80,7 +74,8 @@ const routes = [
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  linkExactActiveClass: 'active'
 })
 
 export default router

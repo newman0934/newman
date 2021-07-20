@@ -53,6 +53,7 @@ import adminProductsAPI from '@/apis/admin/products'
 import Pagination from '@/components/Pagination'
 import DelModal from '@/components/DelModal'
 import ProductModal from '@/components/ProductModal'
+import { Toast } from '@/utils/sweetAlert'
 export default {
   data () {
     return {
@@ -72,7 +73,10 @@ export default {
         this.products = data.products
         this.pagination = data.pagination
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async delProduct () {
@@ -81,10 +85,17 @@ export default {
         if (!data.success) {
           throw new Error('刪除商品失敗')
         }
+        Toast.fire({
+          icon: 'success',
+          title: '刪除商品成功'
+        })
         this.$refs.delModal.hideModal()
         this.fetchProducts()
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     async updateProduct (item) {
@@ -96,6 +107,10 @@ export default {
           if (!data.success) {
             throw new Error('新增商品失敗')
           }
+          Toast.fire({
+            icon: 'success',
+            title: '新增商品成功'
+          })
           this.$refs.productModal.hideModal()
           this.fetchProducts()
         } else {
@@ -104,11 +119,18 @@ export default {
           if (!data.success) {
             throw new Error('修改商品失敗')
           }
+          Toast.fire({
+            icon: 'success',
+            title: '修改商品成功'
+          })
           this.$refs.productModal.hideModal()
           this.fetchProducts()
         }
       } catch (error) {
-        window.alert(error.message)
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
       }
     },
     openDelProductModal (item) {
