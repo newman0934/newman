@@ -45,7 +45,6 @@ export default {
         if (!data.success) {
           throw new Error('取得購物車數量失敗')
         }
-        console.log(data)
         this.cartLength = data.data.carts.length
       } catch (error) {
         Toast.fire({

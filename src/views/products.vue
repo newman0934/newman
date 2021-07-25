@@ -26,8 +26,8 @@
             </div>
             <div class="col-6">
               <div class="input-group">
-                <input type="text" placeholder="搜尋商品" aria-label="Search" class="form-control" />
-                <button type="button" class="btn btn-outline-primary">
+                <input type="text" placeholder="搜尋商品" aria-label="Search" class="form-control" v-model="searchInput" />
+                <button type="button" class="btn btn-outline-primary" @click="searchProducts">
                   <i class="bi bi-search"></i>
                 </button>
               </div>
@@ -80,7 +80,8 @@ export default {
       selectCategory: '',
       productsLength: 0,
       selectProducts: [],
-      isLoading: false
+      isLoading: false,
+      searchInput: ''
     }
   },
   computed: {
@@ -140,6 +141,16 @@ export default {
       } else {
         this.productsLength = this.products.length
         this.selectProducts = this.products
+      }
+    },
+    searchProducts () {
+      if (this.searchInput) {
+        this.selectProducts = this.selectProducts.filter(item => item.title.match(this.searchInput))
+        this.productsLength = this.selectProducts.length
+      } else {
+        this.selectProducts = this.products
+        this.productsLength = this.selectProducts.length
+        this.selectCategory = ''
       }
     }
   },
