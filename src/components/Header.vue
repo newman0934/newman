@@ -21,8 +21,14 @@
           <li class="nav-item">
             <router-link class="nav-link text-white" to="/cart">購物車<span v-if="cartLength" class="bg-danger py-1 px-2 rounded-circle ms-1">{{cartLength}}</span></router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="!hasToken">
             <router-link class="nav-link text-white" to="/login">登入</router-link>
+          </li>
+          <li class="nav-item" v-else>
+            <router-link class="nav-link text-white" to="/" @click="logOut">登出</router-link>
+          </li>
+          <li class="nav-item" v-if="hasToken">
+            <router-link class="nav-link text-white" to="/admin/order">進入後台</router-link>
           </li>
         </ul>
       </div>
@@ -35,7 +41,8 @@ import { Toast } from '../utils/sweetAlert'
 export default {
   data () {
     return {
-      cartLength: 0
+      cartLength: 0,
+      hasToken: false
     }
   },
   methods: {
@@ -52,10 +59,24 @@ export default {
           title: error.message
         })
       }
+    },
+    getToken () {
+      const token = localStorage.getItem('token')
+      if (token) {
+        this.hasToken = true
+      } else {
+        this.hasToken = false
+      }
+    },
+    logOut () {
+      localStorage.removeItem('token')
+      this.getToken()
+      this.$router.replace('/')
     }
   },
   created () {
     this.fetchCarts()
+    this.getToken()
   }
 }
 </script>

@@ -1,7 +1,13 @@
 <template>
   <div>
     <Header></Header>
-    <div v-if="!hasProduct" class="container my-15 py-15">
+    <div v-if="isLoadingData">
+            <div class="container my-15 d-flex align-items-center justify-content-center" style="height:80vh">
+              <half-circle-spinner :animation-duration="1000" :size="200" color="#FFA042" />
+      </div>
+    </div>
+    <div v-else>
+          <div v-if="!hasProduct" class="container my-15 py-15">
       <h1>喔喔！您現在的購物車沒有東西喔！</h1>
       <h2>請商品列表挑選您喜愛的商品吧！</h2>
       <router-link to="/products" class="btn btn-lg btn-primary">前往購物</router-link>
@@ -145,6 +151,7 @@
         </div>
       </v-form>
     </div>
+    </div>
     <Footer></Footer>
   </div>
 </template>
@@ -155,6 +162,7 @@ import Footer from '../components/Footer'
 import orderAPI from '../apis/orders'
 import couponAPI from '../apis/coupons'
 import { Toast } from '../utils/sweetAlert'
+import { HalfCircleSpinner } from 'epic-spinners'
 export default {
   data () {
     return {
@@ -170,19 +178,23 @@ export default {
       },
       coupon_code: '',
       hasProduct: false,
-      isLoading: false
+      isLoading: false,
+      isLoadingData: false
     }
   },
   methods: {
     async fetchCarts () {
       try {
+        this.isLoadingData = true
         const { data } = await cartAPI.getCart()
         if (!data.success) {
           throw new Error('取得購物車失敗')
         }
         this.cart = data.data
         this.hasProduct = !!data?.data?.carts[0]?.id
+        this.isLoadingData = false
       } catch (error) {
+        this.isLoadingData = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -294,7 +306,8 @@ export default {
   },
   components: {
     Header,
-    Footer
+    Footer,
+    HalfCircleSpinner
   }
 }
 </script>

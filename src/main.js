@@ -11,6 +11,7 @@ import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 import AOS from 'aos'
 import 'aos/src/sass/aos.scss'
 import axios from 'axios'
+import CKEditor from '@ckeditor/ckeditor5-vue'
 
 axios.interceptors.request.use(
   config => {
@@ -53,6 +54,7 @@ vm.config.globalProperties.$filters = {
 
 vm.use(router)
 vm.use(AOS)
+vm.use(CKEditor)
 vm.component('v-form', Form)
 vm.component('v-field', Field)
 vm.component('error-message', ErrorMessage)

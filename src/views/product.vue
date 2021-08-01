@@ -1,7 +1,12 @@
 <template>
   <div>
     <Header></Header>
-    <div class="container my-15">
+        <div v-if="isLoadingData">
+      <div class="container my-15 d-flex align-items-center justify-content-center" style="height:80vh">
+              <half-circle-spinner :animation-duration="1000" :size="200" color="#FFA042" />
+      </div>
+    </div>
+    <div class="container my-15" v-else>
       <div class="row pt-10">
         <div class="col-md-6 mb-15">
           <div id="imagesList" class="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -54,7 +59,7 @@
       </div>
     </div>
     <h1 class="text-center mb-5">你可能也喜歡</h1>
-    <swiper class="mb-15" :slides-per-view="swiperView" :space-between="50" :loop="true" :loopFillGroupWithBlank="true" :pagination='{
+    <swiper class="mb-15 container" :slides-per-view="swiperView" :space-between="50" :loop="true" :loopFillGroupWithBlank="true" :pagination='{
   "clickable": true
 }' :navigation="true">
       <swiper-slide v-for="product of randomProducts" :key="product.id">
@@ -93,6 +98,7 @@ import cartAPI from '../apis/cart'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { Toast } from '../utils/sweetAlert'
+import { HalfCircleSpinner } from 'epic-spinners'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import SwiperCore, { Pagination, Navigation } from 'swiper/core'
 import 'swiper/swiper.scss'
@@ -106,6 +112,7 @@ export default {
       product: {},
       qty: 1,
       isLoading: false,
+      isLoadingData: false,
       products: [],
       randomProducts: [],
       swiperView: 3
@@ -114,12 +121,15 @@ export default {
   methods: {
     async fetchProduct (id) {
       try {
+        this.isLoadingData = true
         const { data } = await productAPI.getProduct({ id })
         if (!data.success) {
           throw new Error('獲取商品資料失敗')
         }
         this.product = data.product
+        this.isLoadingData = false
       } catch (error) {
+        this.isLoadingData = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -196,7 +206,8 @@ export default {
     Header,
     Footer,
     Swiper,
-    SwiperSlide
+    SwiperSlide,
+    HalfCircleSpinner
   }
 }
 </script>

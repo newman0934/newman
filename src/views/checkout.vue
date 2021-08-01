@@ -1,7 +1,12 @@
 <template>
   <div class="my-5 row justify-content-center">
     <Header></Header>
-    <form class="col-md-6 my-15 py-15" @submit.prevent="payOrder">
+    <div v-if="isLoadingData">
+            <div class="container my-15 d-flex align-items-center justify-content-center" style="height:80vh">
+              <half-circle-spinner :animation-duration="1000" :size="200" color="#FFA042" />
+      </div>
+    </div>
+    <form v-else class="col-md-6 my-15 py-15" @submit.prevent="payOrder">
       <h2 class="text-primary mb-10">感謝您的購買，以下是您購買的資訊</h2>
       <h3 class="mb-5">訂單資訊</h3>
       <table class="table table-hover table-striped align-middle mb-10">
@@ -67,6 +72,7 @@ import orderAPI from '@/apis/orders.js'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Toast } from '@/utils/sweetAlert'
+import { HalfCircleSpinner } from 'epic-spinners'
 export default {
   data () {
     return {
@@ -74,18 +80,22 @@ export default {
         user: {}
       },
       orderId: '',
-      isLoading: false
+      isLoading: false,
+      isLoadingData: false
     }
   },
   methods: {
     async fetchOrder () {
       try {
+        this.isLoadingData = true
         const { data } = await orderAPI.getOrder(this.orderId)
         if (!data.success) {
           throw new Error('取得訂單失敗')
         }
         this.order = data.order
+        this.isLoadingData = false
       } catch (error) {
+        this.isLoadingData = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -120,7 +130,8 @@ export default {
   },
   components: {
     Header,
-    Footer
+    Footer,
+    HalfCircleSpinner
   }
 }
 </script>

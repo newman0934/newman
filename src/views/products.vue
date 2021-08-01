@@ -1,7 +1,12 @@
 <template>
   <div>
     <Header></Header>
-    <div class="container my-15">
+    <div v-if="isLoadingData">
+      <div class="container my-15 d-flex align-items-center justify-content-center" style="height:80vh">
+              <half-circle-spinner :animation-duration="1000" :size="200" color="#FFA042" />
+      </div>
+    </div>
+    <div class="container my-15" v-else>
       <div class="row pt-15">
         <div class="col-md-3 mb-10">
           <div class="list-group sticky-top">
@@ -26,7 +31,13 @@
             </div>
             <div class="col-6">
               <div class="input-group">
-                <input type="text" placeholder="搜尋商品" aria-label="Search" class="form-control" v-model="searchInput" />
+                <input
+                  type="text"
+                  placeholder="搜尋商品"
+                  aria-label="Search"
+                  class="form-control"
+                  v-model="searchInput"
+                />
                 <button type="button" class="btn btn-outline-primary" @click="searchProducts">
                   <i class="bi bi-search"></i>
                 </button>
@@ -73,6 +84,7 @@ import cartAPI from '../apis/cart'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { Toast } from '../utils/sweetAlert'
+import { HalfCircleSpinner } from 'epic-spinners'
 export default {
   data () {
     return {
@@ -81,6 +93,7 @@ export default {
       productsLength: 0,
       selectProducts: [],
       isLoading: false,
+      isLoadingData: false,
       searchInput: ''
     }
   },
@@ -94,12 +107,15 @@ export default {
   methods: {
     async fetchProducts () {
       try {
+        this.isLoadingData = true
         const { data } = await productAPI.getProducts()
         if (!data.success) {
           throw new Error('取得商品列表失敗')
         }
         this.products = data.products
+        this.isLoadingData = false
       } catch (error) {
+        this.isLoadingData = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -145,7 +161,9 @@ export default {
     },
     searchProducts () {
       if (this.searchInput) {
-        this.selectProducts = this.selectProducts.filter(item => item.title.match(this.searchInput))
+        this.selectProducts = this.selectProducts.filter(item =>
+          item.title.match(this.searchInput)
+        )
         this.productsLength = this.selectProducts.length
       } else {
         this.selectProducts = this.products
@@ -160,7 +178,8 @@ export default {
   },
   components: {
     Header,
-    Footer
+    Footer,
+    HalfCircleSpinner
   }
 }
 </script>
