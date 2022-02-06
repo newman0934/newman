@@ -312,10 +312,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.coupon-input-group {
-  width: 25%;
-  @include mobile{
-    width: 100%;
-  }
-}
+// .coupon-input-group {
+//   width: 25%;
+//   @include mobile{
+//     width: 100%;
+//   }
+// }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header></Header>
-    <div class="hero-header vh-100 mb-15">
+    <div class="hero-header h-screen mb-15 bg-dark">
       <div
         class="container d-flex flex-column justify-content-center position-relative vh-100"
         data-aos="fade-up"
@@ -17,7 +17,7 @@
       <i class="bi bi-arrow-down-circle fs-3 position-absolute bottom-0 start-50"></i>
     </div>
     <div class="container mb-15">
-      <h1 class="text-center mb-8">重訓不只會身材變好</h1>
+      <h1 class="text-center mb-8 bg-slate-600">重訓不只會身材變好</h1>
       <p class="text-center mb-10">重訓除了身材變好之外，還有其他的好處，以下列出四點重訓對於身體與其他方面的好處</p>
       <ul class="ps-0">
         <li class="row g-0">
@@ -142,30 +142,30 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.hero-header {
-  background: url('../assets/images/hero_header.jpg') no-repeat top center;
-  background-attachment: fixed;
-  background-size: cover;
-  @include mobile {
-    background-position: top right;
-  }
-  h1,
-  h2,
-  .bi-arrow-down-circle {
-    color: white;
-  }
-  .bi-arrow-down-circle {
-    animation: down 0.5s infinite;
-  }
-}
+// .hero-header {
+//   background: url('../assets/images/hero_header.jpg') no-repeat top center;
+//   background-attachment: fixed;
+//   background-size: cover;
+//   @include mobile {
+//     background-position: top right;
+//   }
+//   h1,
+//   h2,
+//   .bi-arrow-down-circle {
+//     color: white;
+//   }
+//   .bi-arrow-down-circle {
+//     animation: down 0.5s infinite;
+//   }
+// }
 
-.btn-group,
-.input-group {
-  width: 50%;
-  @include mobile {
-    width: 100%;
-  }
-}
+// .btn-group,
+// .input-group {
+//   width: 50%;
+//   @include mobile {
+//     width: 100%;
+//   }
+// }
 
 .subscription {
   background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)),

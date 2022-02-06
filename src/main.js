@@ -1,8 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import './assets/scss/all.scss'
-import 'bootstrap/dist/js/bootstrap.bundle'
 import { date, currency } from './utils/filters'
 import { Field, Form, ErrorMessage, defineRule, configure } from 'vee-validate'
 import { required, email, min, max, numeric } from '@vee-validate/rules'
@@ -12,6 +10,7 @@ import AOS from 'aos'
 import 'aos/src/sass/aos.scss'
 import axios from 'axios'
 import CKEditor from '@ckeditor/ckeditor5-vue'
+import './assets/style.css'
 
 axios.interceptors.request.use(
   config => {
