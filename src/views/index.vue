@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header></Header>
-    <div class="hero-header h-screen mb-15 bg-dark">
+    <div class="hero-header h-screen mb-15 bg-no-repeat bg-cover bg-fixed !bg-top">
       <div
         class="container d-flex flex-column justify-content-center position-relative vh-100"
         data-aos="fade-up"
@@ -142,22 +142,19 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-// .hero-header {
-//   background: url('../assets/images/hero_header.jpg') no-repeat top center;
-//   background-attachment: fixed;
-//   background-size: cover;
-//   @include mobile {
-//     background-position: top right;
-//   }
-//   h1,
-//   h2,
-//   .bi-arrow-down-circle {
-//     color: white;
-//   }
-//   .bi-arrow-down-circle {
-//     animation: down 0.5s infinite;
-//   }
-// }
+.hero-header {
+  background: url('../assets/images/hero_header.jpg') no-repeat top center;
+  // background-attachment: fixed;
+  // background-size: cover;
+  h1,
+  h2,
+  .bi-arrow-down-circle {
+    color: white;
+  }
+  .bi-arrow-down-circle {
+    animation: down 0.5s infinite;
+  }
+}
 
 // .btn-group,
 // .input-group {

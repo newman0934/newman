@@ -1,7 +1,7 @@
 <template>
-  <nav class="flex navbar navbar-expand-lg fixed-top">
-    <div class="container flex">
-      <router-link class="navbar-brand text-primary" to="/">NEWMAN</router-link>
+  <nav class="flex fixed-top bg-black opacity-50 fixed top-0 inset-x-0">
+    <div class="container flex justify-between items-center py-3 mx-auto text-white">
+      <router-link class="text-primary text-3xl" to="/">NEWMAN</router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -13,25 +13,23 @@
       >
         <i class="bi bi-list"></i>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto flex">
-          <li class="nav-item">
+        <ul class="flex space-x-5">
+          <li>
             <router-link class="nav-link" to="/products">商品列表</router-link>
           </li>
-          <li class="nav-item">
+          <li>
             <router-link class="nav-link" to="/cart">購物車<span v-if="cartLength" class="bg-danger py-1 px-2 rounded-circle ms-1">{{cartLength}}</span></router-link>
           </li>
-          <li class="nav-item" v-if="!hasToken">
+          <li v-if="!hasToken">
             <router-link class="nav-link" to="/login">登入</router-link>
           </li>
-          <li class="nav-item" v-else>
+          <li v-else>
             <router-link class="nav-link" to="/" @click="logOut">登出</router-link>
           </li>
-          <li class="nav-item" v-if="hasToken">
+          <li v-if="hasToken">
             <router-link class="nav-link" to="/admin/order">進入後台</router-link>
           </li>
         </ul>
-      </div>
     </div>
   </nav>
 </template>
@@ -81,31 +79,22 @@ export default {
 }
 </script>
 <style lang="scss">
-// .navbar {
-//   background: rgba(0, 0, 0, 0.5);
-//   .navbar-brand {
-//     font-family: 'Berkshire Swash', cursive;
-//   }
-//   .navbar-toggler {
-//     border: 1px solid #fff;
-//   }
-//   .nav-link {
-//     position: relative;
-//     &:after {
-//       transition: all 1s;
-//       content: '';
-//       position: absolute;
-//       bottom: 0;
-//       left: 0;
-//       right: 0;
-//       margin: auto;
-//       width: 0%;
-//       height: 2px;
-//       background: #ffa042;
-//     }
-//     &:hover:after {
-//       width: 100%;
-//     }
-//   }
-// }
+  .nav-link {
+    position: relative;
+    &:after {
+      transition: all 1s;
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 0%;
+      height: 2px;
+      background: #ffa042;
+    }
+    &:hover:after {
+      width: 100%;
+    }
+  }
 </style>
