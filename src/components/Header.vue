@@ -1,6 +1,6 @@
 <template>
-  <nav class="flex fixed-top bg-black opacity-50 fixed top-0 inset-x-0">
-    <div class="container flex justify-between items-center py-3 mx-auto text-white">
+  <nav class="flex fixed-top bg-black opacity-50 fixed top-0 inset-x-0 z-10">
+    <div class="xl:max-container w-full flex justify-between items-center py-3 mx-auto text-white">
       <router-link class="text-primary text-3xl" to="/">NEWMAN</router-link>
       <button
         class="navbar-toggler"
