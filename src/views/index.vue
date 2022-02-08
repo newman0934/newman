@@ -13,7 +13,7 @@
           <router-link to="/products" class="w-[20%] bg-primary rounded text-2xl py-3 text-center hover:text-white hover:bg-black hover:border-white border-primary border-2 transition">前往商城</router-link>
         </div>
       </div>
-      <i class="bi bi-arrow-down-circle fs-3 position-absolute bottom-0 start-50"></i>
+      <ArrowCircleDownIcon class="text-white absolute w-10 h-10 bottom-2 left-[50%] arrow-down"/>
     </div>
     <div class="xl:max-container mx-auto mb-16">
       <h1 class="text-center text-5xl mb-8">重訓不只會身材變好</h1>
@@ -126,12 +126,13 @@
 <script>
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { ArrowCircleDownIcon } from '@heroicons/vue/outline'
 export default {
   components: {
     Header,
-    Footer
-  },
-  methods: {}
+    Footer,
+    ArrowCircleDownIcon
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -144,6 +145,9 @@ export default {
   background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)),
     url('../assets/images/subscription.jpg') no-repeat center top;
   background-attachment: fixed;
+}
+.arrow-down{
+  animation: down .5s infinite;
 }
 @keyframes down {
   from {
