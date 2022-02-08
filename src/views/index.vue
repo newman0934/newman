@@ -106,18 +106,18 @@
         </li>
       </ul>
     </div>
-    <div class="subscription py-15 text-white">
-      <div class="container" data-aos="fade-up">
-        <h1 class="fs-1 mb-10">請訂閱我們</h1>
-        <h2 class="fs-3 mb-10">我們會定期提供優惠商品與最新的文章</h2>
-        <div class="input-group input-group-lg mb-3">
+    <div class="subscription py-16 text-white">
+      <div class="xl:max-container mx-auto" data-aos="fade-up">
+        <h1 class="text-5xl mb-10">請訂閱我們</h1>
+        <h2 class="text-3xl mb-10">我們會定期提供優惠商品與最新的文章</h2>
+        <div class="mb-3">
           <input
             type="text"
-            class="form-control"
+            class="form-control rounded-l-md w-[30%]"
             placeholder="請輸入您的電子郵件信箱"
             aria-label="請輸入您的電子郵件信箱"
           />
-          <button class="btn btn-outline-primary" type="button">送出</button>
+          <button class="rounded-r-md border-[1px] border-primary py-2 px-4 text-primary hover:bg-primary hover:text-white" type="button">送出</button>
         </div>
       </div>
     </div>
@@ -144,7 +144,6 @@ export default {
   background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)),
     url('../assets/images/subscription.jpg') no-repeat center top;
   background-attachment: fixed;
-  border-style: cover;
 }
 @keyframes down {
   from {
