@@ -1,5 +1,5 @@
 <template>
-  <footer class>
+  <footer class="bg-black">
     <div class="xl:max-container mx-auto pt-16 pb-10">
       <div class="flex justify-between">
         <div class=" brand text-primary text-4xl">
@@ -46,21 +46,9 @@
   </footer>
 </template>
 <style lang="scss" scoped>
-footer {
-  background: #000;
   .brand {
     font-family: 'Berkshire Swash', cursive;
   }
-  .social-link {
-    color: white;
-    margin-right: 2rem;
-    transition: color 0.5s;
-    font-size: 2rem;
-    &:hover {
-      color: #ffa042;
-    }
-  }
-}
 </style>
 <script>
 import { PhoneIcon, MailIcon, HomeIcon } from '@heroicons/vue/outline'
