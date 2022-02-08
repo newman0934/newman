@@ -113,7 +113,7 @@
         <div class="mb-3">
           <input
             type="text"
-            class="form-control rounded-l-md w-[30%]"
+            class="form-control rounded-l-md w-[30%] text-black"
             placeholder="請輸入您的電子郵件信箱"
             aria-label="請輸入您的電子郵件信箱"
           />
