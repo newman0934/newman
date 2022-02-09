@@ -60,8 +60,8 @@
     <div class="xl:max-container mx-auto mb-15">
       <h1 class="text-5xl text-center mb-5">不只是訓練</h1>
       <p class="text-center mb-10">除了訓練以外，吃與睡也都很重要喔！</p>
-      <ul class="flex justify-between">
-        <li class="mb-10 w-[32%] border-2 rounded-xl overflow-hidden">
+      <ul class="grid grid-cols-3 gap-4">
+        <li class="mb-10 card">
           <div class="shadow" data-aos="fade-up">
             <img src="../assets/images/eat.jpg" alt="eat" />
             <div class=" p-5">
@@ -76,7 +76,7 @@
             </div>
           </div>
         </li>
-        <li class="mb-10 w-[32%] border-2 rounded-xl overflow-hidden">
+        <li class="mb-10 card">
           <div class="shadow" data-aos="fade-up" data-aos-delay="500">
             <img
               src="../assets/images/traning.jpg"
@@ -94,7 +94,7 @@
             </div>
           </div>
         </li>
-        <li class="mb-10 w-[32%] border-2 rounded-xl overflow-hidden">
+        <li class="mb-10 card">
           <div class="shadow" data-aos="fade-up" data-aos-delay="1000">
             <img src="../assets/images/sleep.jpg" alt="sleep" />
             <div class="p-5">

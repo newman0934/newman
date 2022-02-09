@@ -40,26 +40,26 @@
                 </button>
               </div>
           </div>
-          <div class="flex flex-wrap">
-            <div class="w-[30%]" v-for="product of selectProducts" :key="product.id">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="" v-for="product of selectProducts" :key="product.id">
               <div class="card mb-10 shadow-sm">
                 <img :src="product.imageUrl" class="card-img-top" alt />
                 <div class="card-body text-center">
                   <h5 class="card-title mb-5">{{ product.title }}</h5>
-                  <div class="row mb-5">
+                  <div class="flex justify-center mb-5">
                     <div
-                      class="col-6 text-secondary text-decoration-line-through"
+                      class="text-gray-400 mr-2 line-through"
                     >原價：{{ product.origin_price }}</div>
-                    <div class="col-6 text-primary">特價：{{ product.price }}</div>
+                    <div class="text-primary">特價：{{ product.price }}</div>
                   </div>
-                  <div class="btn-group w-100">
+                  <div class="w-full mb-5">
                     <router-link
-                      class="btn btn-primary me-2"
+                      class="bg-primary rounded text-white border-[1px] border-primary py-2 px-3 hover:bg-white hover:text-primary mr-2"
                       :to="{ name: 'Product', params: { id: product.id } }"
                     >查看詳情</router-link>
                     <button
                       type="button"
-                      class="btn btn-secondary"
+                      class="bg-gray-600 rounded text-white border-gray-600 border-[1px] py-2 px-3 hover:bg-white hover:text-gray-600 "
                       @click="addToCart(product.id)"
                       :disabled="isLoading"
                     >加入購物車</button>
@@ -188,7 +188,6 @@ export default {
     transform: translateY(-10px);
   }
 }
-
 .card-img-top {
   width: 100%;
   height: 50vh;
@@ -201,11 +200,9 @@ export default {
   overflow: hidden;
 }
 
-.list-group-item:hover {
-  cursor: pointer;
+.active{
+  background: #FFA042;
+  color: white;
 }
 
-.sticky-top {
-  top: 55px;
-}
 </style>

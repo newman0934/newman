@@ -7,8 +7,10 @@
    .max-container {
      max-width: 1140px;
    }
-   .active{
-     @apply bg-primary text-white;
-   }
 }
 
+@layer components {
+  .card{
+    @apply border-[1px] border-gray-300 rounded-xl overflow-hidden
+  }
+}
