@@ -1,15 +1,14 @@
 <template>
   <div>
     <Header></Header>
-    <div class="container my-15 py-15">
-      <div class="row justify-content-center">
-        <h1 class="h3 mb-3 font-weight-normal text-center">請先登入</h1>
-        <div class="col-8">
-          <v-form id="form" v-slot="{ errors }" class="form-signin">
-            <div class="form-floating mb-3">
+    <div class="my-16 py-16">
+      <h1 class="mb-3 text-5xl text-center">請先登入</h1>
+          <v-form id="form" v-slot="{ errors }" class="w-[800px] mx-auto  bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="mb-10">
+            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Email address</label>
               <v-field
                 type="email"
-                class="form-control"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="username"
                 placeholder="name@example.com"
                 autofocus
@@ -18,13 +17,13 @@
                 rules="required|email"
                 :class="{ 'is-invalid': errors['email'] }"
               />
-              <label for="username">Email address</label>
-              <error-message name="email" class="invalid-feedback"></error-message>
+              <error-message name="email" class="invalid-feedback text-red-600"></error-message>
             </div>
-            <div class="form-floating">
+            <div class="mb-10">
+              <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
               <v-field
                 type="password"
-                class="form-control"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="password"
                 placeholder="Password"
                 v-model="password"
@@ -32,19 +31,15 @@
                 rules="required|min:8"
                 :class="{ 'is-invalid': errors['password'] }"
               />
-              <label for="password">Password</label>
-              <error-message name="password" class="invalid-feedback"></error-message>
+              <error-message name="password" class="invalid-feedback text-red-600"></error-message>
             </div>
             <button
-              class="btn btn-lg btn-primary w-100 mt-3"
+              class="py-3 border-[1px] border-primary text-primary rounded-lg w-full mt-3 hover:bg-primary hover:text-white"
               type="submit"
               @click.prevent="login()"
               :disabled="isLoading"
             >登入</button>
           </v-form>
-        </div>
-      </div>
-      <p class="mt-5 mb-3 text-muted text-center">&copy; 2021~∞ - 六角學院</p>
     </div>
     <Footer></Footer>
   </div>
