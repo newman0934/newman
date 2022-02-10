@@ -7,8 +7,8 @@
       </div>
     </div>
     <div class="xl:max-container mx-auto my-16" v-else>
-      <div class="flex pt-16 space-x-10">
-        <div class="sticky w-[20%]">
+      <div class="flex pt-16 md:space-x-10 flex-col md:flex-row">
+        <div class="w-full md:w-[20%] mb-10">
           <div class="border-[1px] border-gray-200 rounded-xl overflow-hidden flex flex-col divide-y">
             <a
               class="py-3 pl-3 hover:text-white hover:bg-primary"
@@ -40,7 +40,7 @@
                 </button>
               </div>
           </div>
-          <div class="grid grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div class="" v-for="product of selectProducts" :key="product.id">
               <div class="card mb-10 shadow-sm">
                 <img :src="product.imageUrl" class="card-img-top" alt />

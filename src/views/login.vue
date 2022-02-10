@@ -1,14 +1,14 @@
 <template>
   <div>
     <Header></Header>
-    <div class="my-16 py-16">
+    <div class="xl:max-container mx-auto my-16 py-16">
       <h1 class="mb-3 text-5xl text-center">請先登入</h1>
-          <v-form id="form" v-slot="{ errors }" class="w-[800px] mx-auto  bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <v-form id="form" v-slot="{ errors }" class="xl:w-[800px] mx-auto  bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <div class="mb-10">
             <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Email address</label>
               <v-field
                 type="email"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                class="shadow border-black rounded w-full py-2 px-3 focus:border-primary text-gray-700 leading-tight focus:ring-0"
                 id="username"
                 placeholder="name@example.com"
                 autofocus
@@ -23,7 +23,7 @@
               <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
               <v-field
                 type="password"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                class="shadow border focus:border-primary rounded w-full py-2 px-3 text-gray-700 leading-tight focus:ring-0"
                 id="password"
                 placeholder="Password"
                 v-model="password"
