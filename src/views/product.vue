@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="xl:max-container mx-auto my-16" v-else>
-      <div class="grid grid-cols-2 gap-8 pt-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10">
         <div class="mb-16">
           <swiper :navigation="true">
           <swiper-slide v-for="(image, i ) of product.imagesUrl" :key="i">
@@ -15,7 +15,7 @@
           </swiper-slide>
           </swiper>
         </div>
-        <div>
+        <div class="ml-10 md:ml-0">
           <h2 class="text-4xl">{{ product.title }}</h2>
           <small>{{ product.description }}</small>
           <h4 class="mt-10 mb-5 text-3xl">產品說明</h4>
@@ -33,8 +33,8 @@
         </div>
       </div>
     </div>
-    <h1 class="text-center mb-5">你可能也喜歡</h1>
-    <swiper class="mb-16 xl:max-container mx-auto" :slides-per-view="swiperView" :space-between="50" :loop="true" :loopFillGroupWithBlank="true" :pagination='{
+    <h1 class="text-center mb-5 text-5xl md:block hidden">你可能也喜歡</h1>
+    <swiper class="mb-16 xl:max-container mx-auto md:block hidden" :slides-per-view="swiperView" :space-between="50" :loop="true" :loopFillGroupWithBlank="true" :pagination='{
   "clickable": true
 }' :navigation="true">
       <swiper-slide v-for="product of randomProducts" :key="product.id">
@@ -48,14 +48,14 @@
               >原價：{{product.origin_price}}</div>
               <div class="col-6 text-primary">特價：{{product.price}}</div>
             </div>
-            <div class="btn-group w-100">
+            <div class="w-full mb-4">
               <router-link
-                class="btn btn-primary me-2"
+                class="bg-primary rounded text-white border-[1px] border-primary py-2 px-3 hover:bg-white hover:text-primary mr-2"
                 :to="{name:'Product', params:{id:product.id}}"
               >查看詳情</router-link>
               <button
                 type="button"
-                class="btn btn-secondary"
+                class="bg-gray-600 rounded text-white border-gray-600 border-[1px] py-2 px-3 hover:bg-white hover:text-gray-600"
                 @click="addToCart(product.id)"
                 :disabled="isLoading"
               >加入購物車</button>
