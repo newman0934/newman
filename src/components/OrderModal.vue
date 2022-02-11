@@ -1,6 +1,6 @@
 <template>
  <div
-    class="modal fade"
+    class="modal fade hidden"
     id="productModal"
     tabindex="-1"
     role="dialog"
