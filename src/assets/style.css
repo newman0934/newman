@@ -8,3 +8,9 @@
      max-width: 1140px;
    }
 }
+
+@layer components {
+  .card{
+    @apply border-[1px] border-gray-300 rounded-xl overflow-hidden
+  }
+}

@@ -1,34 +1,34 @@
 <template>
-  <div class="container">
-    <div class="text-end mt-4">
-      <button class="btn btn-primary" type="button" @click="openCouponModal(true)">建立新的優惠券</button>
+  <div class="xl:max-container">
+    <div class="text-right mt-4">
+      <button class="rounded-md border-[1px] border-primary text-primary px-3 py-2 mb-5 hover:bg-primary hover:text-white" type="button" @click="openCouponModal(true)">建立新的優惠券</button>
     </div>
-    <table class="table mt-4">
-      <thead>
+    <table class="table-auto mt-4 min-w-full border-[1px] border-gray-200 rounded-md overflow-hidden">
+      <thead class="bg-primary border-b-[1px] border-gray-600 text-left">
         <tr>
-          <th>名稱</th>
-          <th>折扣百分比</th>
-          <th>到期日</th>
-          <th>是否啟用</th>
-          <th>編輯</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">名稱</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">折扣百分比</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">到期日</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">是否啟用</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">編輯</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="(item, key) in coupons" :key="key">
-          <td>{{ item.title }}</td>
-          <td>{{ item.percent }}%</td>
-          <td>{{ $filters.date(item.due_date) }}</td>
-          <td>
-            <span v-if="item.is_enabled === 1" class="text-success">啟用</span>
+      <tbody class="divide-y divide-gray-200 ">
+        <tr v-for="(item, key) in coupons" :key="key" class="hover:bg-gray-200">
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">{{ item.title }}</td>
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">{{ item.percent }}%</td>
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">{{ $filters.date(item.due_date) }}</td>
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+            <span v-if="item.is_enabled === 1" class="text-green-500">啟用</span>
             <span v-else class="text-muted">未啟用</span>
           </td>
-          <td>
-            <div class="btn-group">
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+            <div class="flex">
               <button
-                class="btn btn-outline-primary btn-sm"
+                class="px-2 py-1 rounded-l border-[1px] border-primary text-primary hover:text-white hover:bg-primary"
                 @click="openCouponModal(false, item)"
               >編輯</button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDelCouponModal(item)">刪除</button>
+              <button class="px-2 py-1 rounded-r border-[1px] border-red-500 text-red-500 hover:text-white hover:bg-red-500" @click="openDelCouponModal(item)">刪除</button>
             </div>
           </td>
         </tr>
