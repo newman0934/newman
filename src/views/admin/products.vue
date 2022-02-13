@@ -5,7 +5,8 @@
         建立新的產品
       </button>
       </div>
-    <table class="table-auto mt-4 min-w-full border-[1px] border-gray-200 rounded-md overflow-hidden">
+    <div class="overflow-x-auto w-full">
+          <table class="table-fixed mt-4 w-[200%] md:w-full border-[1px] border-gray-200 rounded-md">
       <thead class="bg-primary border-b-[1px] border-gray-600 text-left">
         <tr class="">
           <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">分類</th>
@@ -43,6 +44,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
     <Pagination :pages="pagination" @emitPages="fetchProducts"></Pagination>
     <DelModal :item="tempProduct" @delItem="delProduct" ref="delModal"></DelModal>
     <ProductModal :product="tempProduct" :isNew="isNew" ref="productModal" @update-product="updateProduct"></ProductModal>
