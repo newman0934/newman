@@ -16,13 +16,14 @@
       <div class="text-right mb-5">
         <button class="border-[1px] border-red-600 rounded-md text-red-600 px-3 py-2 hover:bg-red-600 hover:text-white" type="button" :disabled="isLoading" @click="deleteCarts">清空購物車</button>
       </div>
-      <table class="table-auto mt-4 min-w-full border-[1px] border-gray-200 rounded-md overflow-hidden">
+      <div class="overflow-x-auto w-full">
+              <table class="table-auto mt-4 min-w-full border-[1px] border-gray-200 rounded-md overflow-hidden">
         <thead class="bg-primary border-b-[1px] border-gray-600 text-left">
           <tr>
-            <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">品名</th>
-            <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">數量</th>
-            <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">單價</th>
-            <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">刪除商品</th>
+            <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">品名</th>
+            <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">數量</th>
+            <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">單價</th>
+            <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">刪除商品</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 ">
@@ -74,6 +75,7 @@
           </tr>
         </tfoot>
       </table>
+      </div>
       <div class="flex justify-end items-center mt-10">
         <input type="text" class="border-gray-200 rounded-l-lg" v-model="coupon_code" placeholder="請輸入優惠碼" />
         <div class="">

@@ -15,19 +15,19 @@
       </button>
         <ul class="flex space-x-5">
           <li>
-            <router-link class="nav-link" to="/products">商品列表</router-link>
+            <router-link to="/products">商品列表</router-link>
           </li>
           <li>
-            <router-link class="nav-link" to="/cart">購物車<span v-if="cartLength" class="bg-danger py-1 px-2 rounded-circle ms-1">{{cartLength}}</span></router-link>
+            <router-link class="relative" to="/cart">購物車<span v-if="cartLength" class="absolute bg-primary -top-1 -right-2 rounded-full ml-1 text-xs px-1">{{cartLength}}</span></router-link>
           </li>
           <li v-if="!hasToken">
-            <router-link class="nav-link" to="/login">登入</router-link>
+            <router-link to="/login">登入</router-link>
           </li>
           <li v-else>
-            <router-link class="nav-link" to="/" @click="logOut">登出</router-link>
+            <router-link to="/" @click="logOut">登出</router-link>
           </li>
           <li v-if="hasToken">
-            <router-link class="nav-link" to="/admin/order">進入後台</router-link>
+            <router-link to="/admin/order">進入後台</router-link>
           </li>
         </ul>
     </div>

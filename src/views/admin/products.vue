@@ -6,15 +6,15 @@
       </button>
       </div>
     <div class="overflow-x-auto w-full">
-          <table class="table-fixed mt-4 w-[200%] md:w-full border-[1px] border-gray-200 rounded-md">
+          <table class="table-auto mt-4 border-[1px] border-gray-200 rounded-md">
       <thead class="bg-primary border-b-[1px] border-gray-600 text-left">
         <tr class="">
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">分類</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">產品名稱</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">原價</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">售價</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">是否啟用</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">編輯</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">分類</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">產品名稱</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">原價</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">售價</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">是否啟用</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">編輯</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 ">
@@ -30,12 +30,12 @@
           <td>
             <div class="flex">
               <button
-                class="px-2 py-1 rounded-l border-[1px] border-primary text-primary hover:text-white hover:bg-primary"
+                class="px-2 py-1 rounded-l border-[1px] border-primary text-primary hover:text-white hover:bg-primary whitespace-nowrap"
                 type="button"
                 @click="openProductModal(false, item)"
               >編輯</button>
               <button
-                class="px-2 py-1 rounded-r border-[1px] border-red-500 text-red-500 hover:text-white hover:bg-red-500"
+                class="px-2 py-1 rounded-r border-[1px] border-red-500 text-red-500 hover:text-white hover:bg-red-500 whitespace-nowrap"
                 type="button"
                 @click="openDelProductModal(item)"
               >刪除</button>

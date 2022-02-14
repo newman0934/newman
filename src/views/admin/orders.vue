@@ -1,14 +1,15 @@
 <template>
-  <div class="xl:max-container">
-    <table class="table-auto mt-4 min-w-full border-[1px] border-gray-200 rounded-md overflow-hidden">
+  <div class="xl:max-container mx-auto">
+    <div class="overflow-x-auto w-full">
+          <table class="table-auto mt-4 border-[1px] border-gray-200 rounded-md overflow-hidden w-full">
       <thead class="bg-primary border-b-[1px] border-gray-600 text-left">
         <tr>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">購買時間</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">Email</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">購買款項</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">應付金額</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">是否付款</th>
-          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700">編輯</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">購買時間</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">Email</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">購買款項</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">應付金額</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">是否付款</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">編輯</th>
         </tr>
       </thead>
       <tbody>
@@ -58,6 +59,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
     <Pagination :pages="pagination" @emitPages="fetchOrders"></Pagination>
     <delModal :item="tempOrder" ref="delModal" @delItem="delOrder"></delModal>
     <OrderModal :order="tempOrder" ref="orderModal" @update-paid="updatePaid"></OrderModal>
