@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#FFA042'
+        primary: '#FFA042',
+        'manu-bg-opacity': 'rgba(0,0,0,0.5)'
       }
     }
   },
