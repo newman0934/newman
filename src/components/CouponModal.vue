@@ -1,5 +1,6 @@
 <template>
-  <div
+  <teleport to='#model'>
+      <div
     class="modal fade hidden"
     id="couponModal"
     tabindex="-1"
@@ -78,6 +79,8 @@
       </div>
     </div>
   </div>
+
+  </teleport>
 </template>
 <script>
 import modalMixin from '@/utils/modalMixin.js'

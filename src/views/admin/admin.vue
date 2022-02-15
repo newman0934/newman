@@ -16,8 +16,8 @@
           <router-link to="/admin/blog" class="border-[1px] rounded px-3 py-3 border-primary text-primary hover:bg-primary hover:text-white">部落格</router-link>
         </li>
       </ul>
-      <router-view></router-view>
     </nav>
+    <router-view></router-view>
     <Footer></Footer>
   </div>
 </template>

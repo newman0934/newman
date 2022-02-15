@@ -1,5 +1,6 @@
 <template>
-  <div class="modal fade hidden" id="delModal" tabindex="-1" role="dialog"
+<teleport to='#model'>
+    <div class="modal fade hidden" id="delModal" tabindex="-1" role="dialog"
        aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
     <div class="modal-dialog" role="document">
       <div class="modal-content border-0">
@@ -24,6 +25,8 @@
       </div>
     </div>
   </div>
+
+</teleport>
 </template>
 <script>
 import modalMixin from '@/utils/modalMixin.js'

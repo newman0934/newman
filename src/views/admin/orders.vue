@@ -1,5 +1,5 @@
 <template>
-  <div class="xl:max-container mx-auto">
+  <div class="xl:max-container mx-auto mb-20">
     <div class="overflow-x-auto w-full">
           <table class="table-auto mt-4 border-[1px] border-gray-200 rounded-md overflow-hidden w-full">
       <thead class="bg-primary border-b-[1px] border-gray-600 text-left">

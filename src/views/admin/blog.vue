@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" class="xl:max-container mx-auto mb-20">
         <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
     </div>
 </template>

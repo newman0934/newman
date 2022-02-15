@@ -1,5 +1,5 @@
 <template>
-  <div class="xl:max-container">
+  <div class="xl:max-container mx-auto mb-20">
     <div class="text-right mt-4">
       <button class="rounded-md border-[1px] border-primary text-primary px-3 py-2 mb-5 hover:bg-primary hover:text-white" type="button" @click="openCouponModal(true)">建立新的優惠券</button>
     </div>

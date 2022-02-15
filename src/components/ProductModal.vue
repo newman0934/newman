@@ -1,6 +1,8 @@
 <template>
-<div
-    class="modal fade hidden"
+
+  <teleport to="#model">
+    <div
+    class="inset-0 bg-black z-20 fixed"
     id="productModal"
     tabindex="-1"
     role="dialog"
@@ -208,7 +210,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div></teleport>
 </template>
 <script>
 import modalMixin from '@/utils/modalMixin'

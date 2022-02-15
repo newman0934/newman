@@ -1,5 +1,6 @@
 <template>
   <router-view/>
+  <div id="model"></div>
 </template>
 <style>
 body {

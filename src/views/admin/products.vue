@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="xl:max-container mx-auto mb-20">
       <div class="text-right mt-4">
       <button class="rounded-md border-[1px] border-primary text-primary px-3 py-2 mb-5 hover:bg-primary hover:text-white" type="button" @click="openProductModal(true)">
         建立新的產品
       </button>
       </div>
     <div class="overflow-x-auto w-full">
-          <table class="table-auto mt-4 border-[1px] border-gray-200 rounded-md">
+          <table class="table-auto mt-4 border-[1px] border-gray-200 rounded-md w-full">
       <thead class="bg-primary border-b-[1px] border-gray-600 text-left">
         <tr class="">
           <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">分類</th>
