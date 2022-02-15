@@ -1,29 +1,20 @@
 <template>
 <teleport to='#model'>
-    <div class="modal fade hidden" id="delModal" tabindex="-1" role="dialog"
-       aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content border-0">
-        <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title">
+    <div class="bg-modal-bg-opacity fixed inset-0 flex justify-center items-center z-20">
+      <div class="bg-white max-w-3xl w-full p-10 rounded-md">
+                  <h5 class="text-center text-3xl mb-5">
             <span>刪除 {{ item.title }}</span>
           </h5>
-          <button type="button" class="btn-close"
-                  data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          是否刪除 <strong class="text-danger">{{ item.title }}</strong> (刪除後將無法恢復)。
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary"
+        <p class="text-red-600 text-center text-2xl mb-5">是否刪除 <strong>{{ item.title }}</strong> (刪除後將無法恢復)。</p>
+        <div class="text-center space-x-5">
+          <button type="button" class="text-primary border-[1px] border-primary rounded-md px-3 py-2 hover:bg-primary hover:text-white"
                   data-bs-dismiss="modal">取消
           </button>
-          <button type="button" class="btn btn-danger"
+          <button type="button" class="text-red-600 border-[1px] border-red-600 rounded-md px-3 py-2 hover:bg-red-600 hover:text-white"
                   @click="delItem">確認刪除
           </button>
         </div>
       </div>
-    </div>
   </div>
 
 </teleport>

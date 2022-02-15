@@ -5,7 +5,8 @@ module.exports = {
     extend: {
       colors: {
         primary: '#FFA042',
-        'manu-bg-opacity': 'rgba(0,0,0,0.5)'
+        'manu-bg-opacity': 'rgba(0,0,0,0.5)',
+        'modal-bg-opacity': 'rgba(0,0,0,0.8)'
       }
     }
   },
