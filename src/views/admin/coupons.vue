@@ -39,6 +39,7 @@
     <Pagination :pages="pagination" @emit-pages="fetchCoupons"></Pagination>
     <Couponmodal :coupon="tempCoupon" :is-new="isNew" :couponModalOpen="couponModalOpen" @update-coupon="updateCoupon" @closeCouponModal="closeCouponModal"></Couponmodal>
     <DelModal :item="tempCoupon" :delModalOpen="delModalOpen" @delItem="deleteCoupon" @closeDelModal="closeDelModal"></DelModal>
+
   </div>
 </template>
 <script>
@@ -146,11 +147,11 @@ export default {
       this.tempCoupon = { ...item }
       this.delModalOpen = true
     },
-    closeDelModal (value) {
-      this.delModalOpen = value
+    closeDelModal () {
+      this.delModalOpen = false
     },
-    closeCouponModal (value) {
-      this.couponModalOpen = value
+    closeCouponModal () {
+      this.couponModalOpen = false
     }
   },
   created () {

@@ -57,7 +57,7 @@
           </div>
           </form>
                   <div class="text-right space-x-5">
-          <button type="button" class="border-[1px] rounded-md border-primary text-primary px-3 py-2 hover:bg-primary hover:text-white" data-bs-dismiss="modal" @click="cancelHandler(false)">Close</button>
+          <button type="button" class="border-[1px] rounded-md border-primary text-primary px-3 py-2 hover:bg-primary hover:text-white" data-bs-dismiss="modal" @click="$emit('closeCouponModal')">Close</button>
           <button
             type="button"
             class="border-[1px] rounded-md border-red-600 text-red-600 px-3 py-2 hover:bg-red-600 hover:text-white"
@@ -91,11 +91,6 @@ export default {
       tempCoupon: {},
       due_date: '',
       modalToggle: false
-    }
-  },
-  methods: {
-    cancelHandler (value) {
-      this.$emit('closeCouponModal', value)
     }
   },
   watch: {
