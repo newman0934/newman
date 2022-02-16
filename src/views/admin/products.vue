@@ -46,8 +46,8 @@
     </table>
     </div>
     <Pagination :pages="pagination" @emitPages="fetchProducts"></Pagination>
-    <DelModal :item="tempProduct" @delItem="delProduct" ref="delModal"></DelModal>
-    <ProductModal :product="tempProduct" :isNew="isNew" ref="productModal" @update-product="updateProduct"></ProductModal>
+    <DelModal :item="tempProduct" @delItem="delProduct"></DelModal>
+    <ProductModal :product="tempProduct" :isNew="isNew" @update-product="updateProduct"></ProductModal>
   </div>
 </template>
 <script>

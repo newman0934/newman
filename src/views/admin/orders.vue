@@ -61,8 +61,8 @@
     </table>
     </div>
     <Pagination :pages="pagination" @emitPages="fetchOrders"></Pagination>
-    <delModal :item="tempOrder" ref="delModal" @delItem="delOrder"></delModal>
-    <OrderModal :order="tempOrder" ref="orderModal" @update-paid="updatePaid"></OrderModal>
+    <DelModal :item="tempOrder" @delItem="delOrder"></DelModal>
+    <OrderModal :order="tempOrder" @update-paid="updatePaid"></OrderModal>
   </div>
 </template>
 <script>

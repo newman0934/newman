@@ -37,8 +37,8 @@
     </table>
     </div>
     <Pagination :pages="pagination" @emit-pages="fetchCoupons"></Pagination>
-    <Couponmodal :coupon="tempCoupon" :is-new="isNew" ref="couponModal" @update-coupon="updateCoupon"></Couponmodal>
-    <DelModal :item="tempCoupon" @delItem="deleteCoupon" ref="delModal"></DelModal>
+    <Couponmodal :coupon="tempCoupon" :is-new="isNew" :couponModalOpen="couponModalOpen" @update-coupon="updateCoupon" @closeCouponModal="closeCouponModal"></Couponmodal>
+    <DelModal :item="tempCoupon" :delModalOpen="delModalOpen" @delItem="deleteCoupon" @closeDelModal="closeDelModal"></DelModal>
   </div>
 </template>
 <script>
@@ -58,7 +58,9 @@ export default {
         percent: 100,
         code: ''
       },
-      isNew: false
+      isNew: false,
+      couponModalOpen: false,
+      delModalOpen: false
     }
   },
   methods: {
@@ -89,10 +91,9 @@ export default {
             title: '新增優惠券成功'
           })
           this.fetchCoupons()
-          this.$refs.couponModal.hideModal()
+          this.couponModalOpen = false
         } else {
           const { data } = await adminCouponAPI.putAdminCoupon(this.tempCoupon.id, this.tempCoupon)
-          console.log(data)
           if (!data.success) {
             throw new Error('更改優惠券失敗')
           }
@@ -101,7 +102,7 @@ export default {
             title: '修改優惠券成功'
           })
           this.fetchCoupons()
-          this.$refs.couponModal.hideModal()
+          this.couponModalOpen = false
         }
       } catch (error) {
         Toast.fire({
@@ -121,7 +122,7 @@ export default {
           title: '刪除優惠券成功'
         })
         this.fetchCoupons()
-        this.$refs.delModal.hideModal()
+        this.delModalOpen = false
       } catch (error) {
         Toast.fire({
           icon: 'error',
@@ -133,16 +134,23 @@ export default {
       this.isNew = isNew
       if (this.isNew) {
         this.tempCoupon = {
-          due_date: new Date().getTime() / 1000
+          due_date: new Date().getTime() / 1000,
+          is_enabled: 0
         }
       } else {
         this.tempCoupon = { ...item }
       }
-      this.$refs.couponModal.openModal()
+      this.couponModalOpen = true
     },
     openDelCouponModal (item) {
       this.tempCoupon = { ...item }
-      this.$refs.delModal.openModal()
+      this.delModalOpen = true
+    },
+    closeDelModal (value) {
+      this.delModalOpen = value
+    },
+    closeCouponModal (value) {
+      this.couponModalOpen = value
     }
   },
   created () {
