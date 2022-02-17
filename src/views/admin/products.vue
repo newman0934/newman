@@ -46,8 +46,8 @@
     </table>
     </div>
     <Pagination :pages="pagination" @emitPages="fetchProducts"></Pagination>
-    <DelModal :item="tempProduct" @delItem="delProduct"></DelModal>
-    <ProductModal :product="tempProduct" :isNew="isNew" @update-product="updateProduct"></ProductModal>
+    <DelModal :item="tempProduct" :delModalOpen="delModalOpen" @delItem="delProduct" @closeDelModal="closeDelModal"></DelModal>
+    <ProductModal :product="tempProduct" :isNew="isNew" :productModalOpen="productModalOpen" @update-product="updateProduct" @closeProductModal="closeProductModal"></ProductModal>
   </div>
 </template>
 <script>
@@ -65,7 +65,9 @@ export default {
       isNew: false,
       status: {
         fileUploading: false
-      }
+      },
+      productModalOpen: false,
+      delModalOpen: false
     }
   },
   methods: {
@@ -91,7 +93,7 @@ export default {
           icon: 'success',
           title: '刪除商品成功'
         })
-        this.$refs.delModal.hideModal()
+        this.delModalOpen = false
         this.fetchProducts()
       } catch (error) {
         Toast.fire({
@@ -113,7 +115,7 @@ export default {
             icon: 'success',
             title: '新增商品成功'
           })
-          this.$refs.productModal.hideModal()
+          this.productModalOpen = false
           this.fetchProducts()
         } else {
           const { data } = await adminProductsAPI.putAdminProduct(this.tempProduct.id, this.tempProduct)
@@ -125,7 +127,7 @@ export default {
             icon: 'success',
             title: '修改商品成功'
           })
-          this.$refs.productModal.hideModal()
+          this.productModalOpen = false
           this.fetchProducts()
         }
       } catch (error) {
@@ -137,7 +139,7 @@ export default {
     },
     openDelProductModal (item) {
       this.tempProduct = { ...item }
-      this.$refs.delModal.openModal()
+      this.delModalOpen = true
     },
     openProductModal (isNew, item) {
       if (isNew) {
@@ -147,7 +149,13 @@ export default {
         this.tempProduct = { ...item }
         this.isNew = false
       }
-      this.$refs.productModal.openModal()
+      this.productModalOpen = true
+    },
+    closeDelModal () {
+      this.delModalOpen = false
+    },
+    closeProductModal () {
+      this.productModalOpen = false
     }
   },
   created () {

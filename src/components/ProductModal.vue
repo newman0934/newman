@@ -2,7 +2,8 @@
 
   <teleport to="#model">
     <div
-    class="inset-0 bg-black z-20 fixed"
+    class="inset-0 bg-black z-20"
+    :class="{ hidden: !modalToggle}"
     id="productModal"
     tabindex="-1"
     role="dialog"
@@ -197,6 +198,7 @@
             type="button"
             class="btn btn-outline-secondary"
             data-bs-dismiss="modal"
+            @click="$emit('closeProductModal')"
           >
             取消
           </button>
@@ -213,7 +215,6 @@
   </div></teleport>
 </template>
 <script>
-import modalMixin from '@/utils/modalMixin'
 import productAdminAPI from '@/apis/admin/products.js'
 export default {
   props: {
@@ -227,13 +228,18 @@ export default {
     isNew: {
       type: Boolean,
       default: false
+    },
+    productModalOpen: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       status: {},
       modal: '',
-      tempProduct: {}
+      tempProduct: {},
+      modalToggle: false
     }
   },
   methods: {
@@ -264,8 +270,10 @@ export default {
       if (!this.tempProduct.imageUrl) {
         this.tempProduct.imageUrl = ''
       }
+    },
+    productModalOpen () {
+      this.modalToggle = this.productModalOpen
     }
-  },
-  mixins: [modalMixin]
+  }
 }
 </script>
