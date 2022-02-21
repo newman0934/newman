@@ -1,66 +1,99 @@
 <template>
-  <div class="container">
-    <table class="table mt-4">
-      <thead>
-        <tr>
-          <th>購買時間</th>
-          <th>Email</th>
-          <th>購買款項</th>
-          <th>應付金額</th>
-          <th>是否付款</th>
-          <th>編輯</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="order of orders" :key="order.id" :class="{ 'text-secondary': !order.is_paid }">
-          <td>{{ $filters.date(order.create_at) }}</td>
-          <td>
-            <span v-text="order.user.email" v-if="order.user"></span>
-          </td>
-          <td>
-            <ul class="list-unstyled">
-              <li v-for="(product, i) in order.products" :key="i">
-                {{ product.product.title }} 數量：{{ product.qty }}
-                {{ product.product.unit }}
-              </li>
-            </ul>
-          </td>
-          <td class="text-right">{{ order.total }}</td>
-          <td>
-            <div class="form-check form-switch">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                :id="`paidSwitch${order.id}`"
-                v-model="order.is_paid"
-                @change="updatePaid(order)"
-              />
-              <label class="form-check-label" :for="`paidSwitch${order.id}`">
-                <span v-if="order.is_paid">已付款</span>
-                <span v-else>未付款</span>
-              </label>
-            </div>
-          </td>
-          <td>
-            <div class="btn-group">
-              <button
-                class="btn btn-outline-primary btn-sm"
-                type="button"
-                @click="openModal(order)"
-              >檢視</button>
-              <button
-                class="btn btn-outline-danger btn-sm"
-                type="button"
-                @click="openDelOrderModal(order)"
-              >刪除</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="xl:max-container mx-auto mb-20">
+    <div class="overflow-x-auto w-full">
+      <table class="table-auto mt-4 border-[1px] border-gray-200 rounded-md overflow-hidden w-full">
+        <thead class="bg-primary border-b-[1px] border-gray-600 text-left">
+          <tr>
+            <th
+              class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap"
+            >購買時間</th>
+            <th
+              class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap"
+            >Email</th>
+            <th
+              class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap"
+            >購買款項</th>
+            <th
+              class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap"
+            >應付金額</th>
+            <th
+              class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap"
+            >是否付款</th>
+            <th
+              class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap"
+            >編輯</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="order of orders"
+            :key="order.id"
+            class="hover:bg-gray-200"
+            :class="{ 'text-gray-500': !order.is_paid }"
+          >
+            <td
+              class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >{{ $filters.date(order.create_at) }}</td>
+            <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+              <span v-text="order.user.email" v-if="order.user"></span>
+            </td>
+            <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+              <ul class="list-unstyled">
+                <li v-for="(product, i) in order.products" :key="i">
+                  {{ product.product.title }} 數量：{{ product.qty }}
+                  {{ product.product.unit }}
+                </li>
+              </ul>
+            </td>
+            <td
+              class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >{{ order.total }}</td>
+            <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+              <div class="form-check form-switch">
+                <input
+                  class="text-primary mr-2"
+                  type="checkbox"
+                  :id="`paidSwitch${order.id}`"
+                  v-model="order.is_paid"
+                  @change="updatePaid(order)"
+                />
+                <label :for="`paidSwitch${order.id}`">
+                  <span v-if="order.is_paid">已付款</span>
+                  <span v-else>未付款</span>
+                </label>
+              </div>
+            </td>
+            <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+              <div class="btn-group">
+                <button
+                  class="px-2 py-1 rounded-l border-[1px] border-primary text-primary hover:text-white hover:bg-primary"
+                  type="button"
+                  @click="openModal(order)"
+                >檢視</button>
+                <button
+                  class="px-2 py-1 rounded-r border-[1px] border-red-500 text-red-500 hover:text-white hover:bg-red-500"
+                  type="button"
+                  @click="openDelOrderModal(order)"
+                >刪除</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <Pagination :pages="pagination" @emitPages="fetchOrders"></Pagination>
-    <delModal :item="tempOrder" ref="delModal" @delItem="delOrder"></delModal>
-    <OrderModal :order="tempOrder" ref="orderModal" @update-paid="updatePaid"></OrderModal>
+    <DelModal
+      :item="tempOrder"
+      :delModalOpen="delModalOpen"
+      @delItem="delOrder"
+      @closeDelModal="closeDelModal"
+    ></DelModal>
+    <OrderModal
+      :order="tempOrder"
+      :orderModalOpen="orderModalOpen"
+      @update-paid="updatePaid"
+      @closeOrderModal="closeOrderModal"
+    ></OrderModal>
   </div>
 </template>
 <script>
@@ -77,7 +110,9 @@ export default {
       isNew: false,
       pagination: {},
       isLoading: false,
-      tempOrder: {}
+      tempOrder: {},
+      orderModalOpen: false,
+      delModalOpen: false
     }
   },
   methods: {
@@ -108,7 +143,7 @@ export default {
           icon: 'success',
           title: '刪除訂單成功'
         })
-        this.$refs.delModal.hideModal()
+        this.delModalOpen = false
         this.fetchOrders()
       } catch (error) {
         Toast.fire({
@@ -132,7 +167,7 @@ export default {
           title: '修改訂單成功'
         })
         this.isLoading = false
-        this.$refs.orderModal.hideModal()
+        this.orderModalOpen = false
         this.fetchOrders()
       } catch (error) {
         Toast.fire({
@@ -143,11 +178,17 @@ export default {
     },
     openDelOrderModal (item) {
       this.tempOrder = { ...item }
-      this.$refs.delModal.openModal()
+      this.delModalOpen = true
     },
     openModal (item) {
       this.tempOrder = { ...item }
-      this.$refs.orderModal.openModal()
+      this.orderModalOpen = true
+    },
+    closeDelModal () {
+      this.delModalOpen = false
+    },
+    closeOrderModal () {
+      this.orderModalOpen = false
     }
   },
   created () {

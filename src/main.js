@@ -1,8 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import './assets/scss/all.scss'
-import 'bootstrap/dist/js/bootstrap.bundle'
 import { date, currency } from './utils/filters'
 import { Field, Form, ErrorMessage, defineRule, configure } from 'vee-validate'
 import { required, email, min, max, numeric } from '@vee-validate/rules'
@@ -11,6 +9,8 @@ import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 import AOS from 'aos'
 import 'aos/src/sass/aos.scss'
 import axios from 'axios'
+import CKEditor from '@ckeditor/ckeditor5-vue'
+import './assets/style.css'
 
 axios.interceptors.request.use(
   config => {
@@ -53,6 +53,7 @@ vm.config.globalProperties.$filters = {
 
 vm.use(router)
 vm.use(AOS)
+vm.use(CKEditor)
 vm.component('v-form', Form)
 vm.component('v-field', Field)
 vm.component('error-message', ErrorMessage)

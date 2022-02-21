@@ -1,60 +1,40 @@
 <template>
   <div>
     <Header></Header>
-    <div class="container my-15">
-      <div class="row pt-10">
-        <div class="col-md-6 mb-15">
-          <div id="imagesList" class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div class="carousel-inner">
-              <div
-                class="carousel-item"
-                :class="{ active: i == 0}"
-                v-for="(image, i) of product.imagesUrl"
-                :key="i"
-              >
-                <img :src="image" class="d-block w-100" />
-              </div>
-            </div>
-            <button
-              class="carousel-control-prev"
-              type="button"
-              data-bs-target="#imagesList"
-              data-bs-slide="prev"
-            >
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button
-              class="carousel-control-next"
-              type="button"
-              data-bs-target="#imagesList"
-              data-bs-slide="next"
-            >
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
+        <div v-if="isLoadingData">
+      <div class="xl:max-container mx-auto my-16 flex items-center justify-center" style="height:80vh">
+              <half-circle-spinner :animation-duration="1000" :size="200" color="#FFA042" />
+      </div>
+    </div>
+    <div class="xl:max-container mx-auto my-16" v-else>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10">
+        <div class="mb-16">
+          <swiper :navigation="true">
+          <swiper-slide v-for="(image, i ) of product.imagesUrl" :key="i">
+            <img :src="image" class="block w-full">
+          </swiper-slide>
+          </swiper>
         </div>
-        <div class="col-md-6">
-          <h2>{{ product.title }}</h2>
+        <div class="ml-10 md:ml-0">
+          <h2 class="text-4xl">{{ product.title }}</h2>
           <small>{{ product.description }}</small>
-          <h4 class="mt-10 mb-5">產品說明</h4>
-          <ul class v-html="product.content"></ul>
-          <p class="lh-lg text-secondary text-decoration-line-through">原價：{{ product.origin_price }}</p>
-          <h5 class="mb-10 text-primary">售價：{{ product.price }}</h5>
-          <div class="input-group">
-            <input type="number" class="form-control" min="1" v-model.number="qty" />
+          <h4 class="mt-10 mb-5 text-3xl">產品說明</h4>
+          <ul class="mb-5" v-html="product.content"></ul>
+          <p class="mb-5 text-gray-300 line-through">原價：{{ product.origin_price }}</p>
+          <h5 class="mb-10 text-primary text-xl">售價：{{ product.price }}</h5>
+          <div>
+            <input type="number" class="rounded-l-md border-gray-300" min="1" v-model.number="qty" />
             <button
               type="button"
-              class="btn btn-outline-primary"
+              class="rounded-r-md px-2 py-2 border-[1px] border-primary text-primary hover:bg-primary hover:text-white"
               @click="addToCart(product.id, qty)"
             >加入購物車</button>
           </div>
         </div>
       </div>
     </div>
-    <h1 class="text-center mb-5">你可能也喜歡</h1>
-    <swiper class="mb-15" :slides-per-view="swiperView" :space-between="50" :loop="true" :loopFillGroupWithBlank="true" :pagination='{
+    <h1 class="text-center mb-5 text-5xl md:block hidden">你可能也喜歡</h1>
+    <swiper class="mb-16 xl:max-container mx-auto md:block hidden" :slides-per-view="swiperView" :space-between="50" :loop="true" :loopFillGroupWithBlank="true" :pagination='{
   "clickable": true
 }' :navigation="true">
       <swiper-slide v-for="product of randomProducts" :key="product.id">
@@ -68,14 +48,14 @@
               >原價：{{product.origin_price}}</div>
               <div class="col-6 text-primary">特價：{{product.price}}</div>
             </div>
-            <div class="btn-group w-100">
+            <div class="w-full mb-4">
               <router-link
-                class="btn btn-primary me-2"
+                class="bg-primary rounded text-white border-[1px] border-primary py-2 px-3 hover:bg-white hover:text-primary mr-2"
                 :to="{name:'Product', params:{id:product.id}}"
               >查看詳情</router-link>
               <button
                 type="button"
-                class="btn btn-secondary"
+                class="bg-gray-600 rounded text-white border-gray-600 border-[1px] py-2 px-3 hover:bg-white hover:text-gray-600"
                 @click="addToCart(product.id)"
                 :disabled="isLoading"
               >加入購物車</button>
@@ -93,6 +73,7 @@ import cartAPI from '../apis/cart'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { Toast } from '../utils/sweetAlert'
+import { HalfCircleSpinner } from 'epic-spinners'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import SwiperCore, { Pagination, Navigation } from 'swiper/core'
 import 'swiper/swiper.scss'
@@ -106,6 +87,7 @@ export default {
       product: {},
       qty: 1,
       isLoading: false,
+      isLoadingData: false,
       products: [],
       randomProducts: [],
       swiperView: 3
@@ -114,12 +96,15 @@ export default {
   methods: {
     async fetchProduct (id) {
       try {
+        this.isLoadingData = true
         const { data } = await productAPI.getProduct({ id })
         if (!data.success) {
           throw new Error('獲取商品資料失敗')
         }
         this.product = data.product
+        this.isLoadingData = false
       } catch (error) {
+        this.isLoadingData = false
         Toast.fire({
           icon: 'error',
           title: error.message
@@ -186,7 +171,6 @@ export default {
     await this.getRandomProducts()
 
     if (/Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      console.log('手機')
       this.swiperView = 1
     } else {
       this.swiperView = 3
@@ -196,7 +180,8 @@ export default {
     Header,
     Footer,
     Swiper,
-    SwiperSlide
+    SwiperSlide,
+    HalfCircleSpinner
   }
 }
 </script>

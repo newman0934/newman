@@ -1,40 +1,41 @@
 <template>
-  <div class="container">
-        <div class="text-end mt-4">
-      <button class="btn btn-primary" type="button" @click="openProductModal(true)">
+  <div class="xl:max-container mx-auto mb-20">
+      <div class="text-right mt-4">
+      <button class="rounded-md border-[1px] border-primary text-primary px-3 py-2 mb-5 hover:bg-primary hover:text-white" type="button" @click="openProductModal(true)">
         建立新的產品
       </button>
       </div>
-    <table class="table mt-4">
-      <thead>
-        <tr>
-          <th width="120">分類</th>
-          <th>產品名稱</th>
-          <th width="120">原價</th>
-          <th width="120">售價</th>
-          <th width="100">是否啟用</th>
-          <th width="200">編輯</th>
+    <div class="overflow-x-auto w-full">
+          <table class="table-auto mt-4 border-[1px] border-gray-200 rounded-md w-full">
+      <thead class="bg-primary border-b-[1px] border-gray-600 text-left">
+        <tr class="">
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">分類</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">產品名稱</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">原價</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">售價</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">是否啟用</th>
+          <th class="py-3 px-6 text-md font-medium tracking-wider text-gray-700 whitespace-nowrap">編輯</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="item in products" :key="item.id">
-          <td>{{ item.category }}</td>
-          <td>{{ item.title }}</td>
-          <td class="text-right">{{ $filters.currency(item.origin_price)}}</td>
-          <td class="text-right">{{ $filters.currency(item.price)}}</td>
+      <tbody class="divide-y divide-gray-200 ">
+        <tr v-for="item in products" :key="item.id" class="hover:bg-gray-200">
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">{{ item.category }}</td>
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">{{ item.title }}</td>
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">{{ $filters.currency(item.origin_price)}}</td>
+          <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">{{ $filters.currency(item.price)}}</td>
           <td>
-            <span v-if="item.is_enabled" class="text-success">啟用</span>
-            <span v-else>未啟用</span>
+            <span v-if="item.is_enabled" class="py-4 px-6 text-sm font-medium whitespace-nowrap text-green-600">啟用</span>
+            <span v-else class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">未啟用</span>
           </td>
           <td>
-            <div class="btn-group">
+            <div class="flex">
               <button
-                class="btn btn-outline-primary btn-sm"
+                class="px-2 py-1 rounded-l border-[1px] border-primary text-primary hover:text-white hover:bg-primary whitespace-nowrap"
                 type="button"
                 @click="openProductModal(false, item)"
               >編輯</button>
               <button
-                class="btn btn-outline-danger btn-sm"
+                class="px-2 py-1 rounded-r border-[1px] border-red-500 text-red-500 hover:text-white hover:bg-red-500 whitespace-nowrap"
                 type="button"
                 @click="openDelProductModal(item)"
               >刪除</button>
@@ -43,9 +44,10 @@
         </tr>
       </tbody>
     </table>
+    </div>
     <Pagination :pages="pagination" @emitPages="fetchProducts"></Pagination>
-    <DelModal :item="tempProduct" @delItem="delProduct" ref="delModal"></DelModal>
-    <ProductModal :product="tempProduct" :isNew="isNew" ref="productModal" @update-product="updateProduct"></ProductModal>
+    <DelModal :item="tempProduct" :delModalOpen="delModalOpen" @delItem="delProduct" @closeDelModal="closeDelModal"></DelModal>
+    <ProductModal :product="tempProduct" :isNew="isNew" :productModalOpen="productModalOpen" @update-product="updateProduct" @closeProductModal="closeProductModal"></ProductModal>
   </div>
 </template>
 <script>
@@ -63,7 +65,9 @@ export default {
       isNew: false,
       status: {
         fileUploading: false
-      }
+      },
+      productModalOpen: false,
+      delModalOpen: false
     }
   },
   methods: {
@@ -89,7 +93,7 @@ export default {
           icon: 'success',
           title: '刪除商品成功'
         })
-        this.$refs.delModal.hideModal()
+        this.delModalOpen = false
         this.fetchProducts()
       } catch (error) {
         Toast.fire({
@@ -111,7 +115,7 @@ export default {
             icon: 'success',
             title: '新增商品成功'
           })
-          this.$refs.productModal.hideModal()
+          this.productModalOpen = false
           this.fetchProducts()
         } else {
           const { data } = await adminProductsAPI.putAdminProduct(this.tempProduct.id, this.tempProduct)
@@ -123,7 +127,7 @@ export default {
             icon: 'success',
             title: '修改商品成功'
           })
-          this.$refs.productModal.hideModal()
+          this.productModalOpen = false
           this.fetchProducts()
         }
       } catch (error) {
@@ -135,7 +139,7 @@ export default {
     },
     openDelProductModal (item) {
       this.tempProduct = { ...item }
-      this.$refs.delModal.openModal()
+      this.delModalOpen = true
     },
     openProductModal (isNew, item) {
       if (isNew) {
@@ -145,7 +149,13 @@ export default {
         this.tempProduct = { ...item }
         this.isNew = false
       }
-      this.$refs.productModal.openModal()
+      this.productModalOpen = true
+    },
+    closeDelModal () {
+      this.delModalOpen = false
+    },
+    closeProductModal () {
+      this.productModalOpen = false
     }
   },
   created () {

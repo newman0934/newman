@@ -8,6 +8,7 @@ import Admin from '@/views/admin/admin'
 import AdminProducts from '@/views/admin/products'
 import AdminCoupon from '@/views/admin/coupons'
 import AdminOrder from '@/views/admin/orders'
+import AdminBLog from '@/views/admin/blog'
 import Login from '@/views/login'
 
 const token = localStorage.getItem('token')
@@ -67,6 +68,10 @@ const routes = [
       {
         path: 'order',
         component: AdminOrder
+      },
+      {
+        path: 'blog',
+        component: AdminBLog
       }
     ]
   }

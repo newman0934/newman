@@ -1,42 +1,33 @@
 <template>
-<div
-    class="modal fade"
-    id="productModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-    ref="modal"
-  >
-    <div class="modal-dialog modal-xl" role="document">
-      <div class="modal-content border-0">
-        <div class="modal-header bg-dark text-white">
-          <h5 class="modal-title" id="exampleModalLabel">
+
+  <teleport to="#model">
+      <div
+      class="bg-modal-bg-opacity flex fixed inset-0 justify-center items-center z-20"
+      :class="{ hidden: !modalToggle }"
+      @click.self="$emit('closeProductModal')"
+    >
+      <div class="bg-white max-w-3xl w-full p-10 rounded-md h-screen overflow-y-auto">
+        <div class="text-gray-600">
+          <h5 class="text-3xl text-center mb-10">
             <span v-if="isNew">新增產品</span>
             <span v-else>編輯產品</span>
           </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
         </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-4">
+        <div>
+          <div class="flex overflow-auto space-x-5">
+            <div class="w-[50%]">
               <div class="mb-3">
-                <label for="image" class="form-label">輸入圖片網址</label>
+                <label for="image" class="block mb-5">輸入圖片網址</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="w-full rounded border-gray-300"
                   id="image"
                   v-model="tempProduct.imageUrl"
                   placeholder="請輸入圖片連結"
                 />
               </div>
               <div class="mb-3">
-                <label for="customFile" class="form-label"
+                <label for="customFile" class="block mb-5"
                   >或 上傳圖片
                   <i
                     class="fas fa-spinner fa-spin"
@@ -46,7 +37,7 @@
                 <input
                   type="file"
                   id="customFile"
-                  class="form-control"
+                  class="w-full rounded border-gray-300"
                   ref="fileInput"
                   @change="uploadFile"
                 />
@@ -61,7 +52,7 @@
                 >
                   <input
                     type="url"
-                    class="form-control form-control"
+                    class="w-full rounded border-gray-300"
                     v-model="tempProduct.imagesUrl[key]"
                     placeholder="請輸入連結"
                   />
@@ -70,10 +61,10 @@
                   </div>
                   <button
                     type="button"
-                    class="btn btn-outline-danger"
+                    class="text-red-600 border-[1px] border-red-600 rounded-md px-3 py-2 hover:bg-red-600 hover:text-white my-5"
                     @click="tempProduct.imagesUrl.splice(key, 1)"
                   >
-                    移除
+                    移除圖片
                   </button>
                 </div>
                 <div
@@ -83,7 +74,7 @@
                   "
                 >
                   <button
-                    class="btn btn-outline-primary btn-sm d-block w-100"
+                    class="text-primary border-[1px] border-primary rounded-md px-3 py-2 hover:bg-primary hover:text-white"
                     @click="tempProduct.imagesUrl.push('')"
                   >
                     新增圖片
@@ -91,34 +82,34 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-8">
+            <div class="w-full">
               <div class="mb-3">
-                <label for="title" class="form-label">標題</label>
+                <label for="title" class="block mb-5">標題</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="w-full rounded border-gray-300 mb-5"
                   id="title"
                   v-model="tempProduct.title"
                   placeholder="請輸入標題"
                 />
               </div>
 
-              <div class="row gx-2">
+              <div>
                 <div class="mb-3 col-md-6">
-                  <label for="category" class="form-label">分類</label>
+                  <label for="category" class="block mb-5">分類</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="w-full rounded border-gray-300 mb-5"
                     id="category"
                     v-model="tempProduct.category"
                     placeholder="請輸入分類"
                   />
                 </div>
                 <div class="mb-3 col-md-6">
-                  <label for="price" class="form-label">單位</label>
+                  <label for="price" class="block mb-5">單位</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="w-full rounded border-gray-300 mb-5"
                     id="unit"
                     v-model="tempProduct.unit"
                     placeholder="請輸入單位"
@@ -126,12 +117,12 @@
                 </div>
               </div>
 
-              <div class="row gx-2">
+              <div>
                 <div class="mb-3 col-md-6">
-                  <label for="origin_price" class="form-label">原價</label>
+                  <label for="origin_price" class="block mb-5">原價</label>
                   <input
                     type="number"
-                    class="form-control"
+                    class="w-full rounded border-gray-300 mb-5"
                     id="origin_price"
                     min="0"
                     v-model.number="tempProduct.origin_price"
@@ -139,10 +130,10 @@
                   />
                 </div>
                 <div class="mb-3 col-md-6">
-                  <label for="price" class="form-label">售價</label>
+                  <label for="price" class="block mb-5">售價</label>
                   <input
                     type="number"
-                    class="form-control"
+                    class="w-full rounded border-gray-300 mb-5"
                     id="price"
                     v-model.number="tempProduct.price"
                     min="0"
@@ -150,23 +141,21 @@
                   />
                 </div>
               </div>
-              <hr />
-
               <div class="mb-3">
-                <label for="description" class="form-label">產品描述</label>
+                <label for="description" class="block mb-5">產品描述</label>
                 <textarea
                   type="text"
-                  class="form-control"
+                  class="w-full rounded border-gray-300"
                   id="description"
                   v-model="tempProduct.description"
                   placeholder="請輸入產品描述"
                 ></textarea>
               </div>
               <div class="mb-3">
-                <label for="content" class="form-label">說明內容</label>
+                <label for="content" class="block mb-5">說明內容</label>
                 <textarea
                   type="text"
-                  class="form-control"
+                  class="w-full rounded border-gray-300"
                   id="content"
                   v-model="tempProduct.content"
                   placeholder="請輸入產品說明內容"
@@ -175,14 +164,13 @@
               <div class="mb-3">
                 <div class="form-check">
                   <input
-                    class="form-check-input"
                     type="checkbox"
                     v-model="tempProduct.is_enabled"
                     :true-value="1"
                     :false-value="0"
                     id="is_enabled"
                   />
-                  <label class="form-check-label" for="is_enabled">
+                  <label for="is_enabled">
                     是否啟用
                   </label>
                 </div>
@@ -190,17 +178,18 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="text-right space-x-5">
           <button
             type="button"
-            class="btn btn-outline-secondary"
+            class="text-primary border-[1px] border-primary rounded-md px-3 py-2 hover:bg-primary hover:text-white"
             data-bs-dismiss="modal"
+            @click="$emit('closeProductModal')"
           >
             取消
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="text-red-600 border-[1px] border-red-600 rounded-md px-3 py-2 hover:bg-red-600 hover:text-white"
             @click="$emit('update-product', tempProduct)"
           >
             確認
@@ -208,10 +197,9 @@
         </div>
       </div>
     </div>
-  </div>
+  </teleport>
 </template>
 <script>
-import modalMixin from '@/utils/modalMixin'
 import productAdminAPI from '@/apis/admin/products.js'
 export default {
   props: {
@@ -225,13 +213,18 @@ export default {
     isNew: {
       type: Boolean,
       default: false
+    },
+    productModalOpen: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       status: {},
       modal: '',
-      tempProduct: {}
+      tempProduct: {},
+      modalToggle: false
     }
   },
   methods: {
@@ -262,8 +255,10 @@ export default {
       if (!this.tempProduct.imageUrl) {
         this.tempProduct.imageUrl = ''
       }
+    },
+    productModalOpen () {
+      this.modalToggle = this.productModalOpen
     }
-  },
-  mixins: [modalMixin]
+  }
 }
 </script>
