@@ -8,6 +8,6 @@
 # newman管理員帳密
 
 ```
-帳號：newman0934
+帳號：newman0934@gmail.com
 密碼：admin123
 ```
