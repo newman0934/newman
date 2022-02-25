@@ -82,46 +82,67 @@ import Footer from '../components/Footer'
 import { Toast } from '../utils/sweetAlert'
 import { HalfCircleSpinner } from 'epic-spinners'
 import { SearchIcon } from '@heroicons/vue/solid'
+import { ref, computed } from 'vue'
 export default {
-  data () {
-    return {
-      products: [],
-      selectCategory: '',
-      productsLength: 0,
-      selectProducts: [],
-      isLoading: false,
-      isLoadingData: false,
-      searchInput: ''
-    }
-  },
-  computed: {
-    getCategories () {
-      const categories = new Set()
-      this.products.forEach(item => categories.add(item.category))
-      return [...categories]
-    }
-  },
-  methods: {
-    async fetchProducts () {
+  setup () {
+    const products = ref([])
+    const selectCategory = ref('')
+    const productsLength = ref(0)
+    const selectProducts = ref([])
+    const isLoading = ref(false)
+    const isLoadingData = ref(false)
+    const searchInput = ref('')
+
+    const fetchProducts = async () => {
       try {
-        this.isLoadingData = true
+        isLoadingData.value = true
         const { data } = await productAPI.getProducts()
         if (!data.success) {
           throw new Error('取得商品列表失敗')
         }
-        this.products = data.products
-        this.isLoadingData = false
+        products.value = data.products
+        getSelectProducts('')
+        isLoadingData.value = false
       } catch (error) {
-        this.isLoadingData = false
+        isLoadingData.value = false
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async addToCart (id, qty = 1) {
+    }
+    fetchProducts()
+
+    const getSelectProducts = (category) => {
+      selectCategory.value = category
+      if (selectCategory.value) {
+        const selectProductsWithCategory = products.value.filter(
+          item => item.category === category
+        )
+        productsLength.value = selectProducts.value.length
+        selectProducts.value = selectProductsWithCategory
+      } else {
+        productsLength.value = products.value.length
+        selectProducts.value = products.value
+      }
+    }
+
+    const searchProducts = () => {
+      if (searchInput.value) {
+        selectProducts.value = selectProducts.value.filter(item =>
+          item.title.match(searchInput.value)
+        )
+        productsLength.value = selectProducts.value.length
+      } else {
+        selectProducts.value = products.value
+        productsLength.value = selectProducts.value.length
+        selectCategory.value = ''
+      }
+    }
+
+    const addToCart = async (id, qty = 1) => {
       try {
-        this.isLoading = true
+        isLoading.value = true
         const cartItem = {
           product_id: id,
           qty
@@ -134,44 +155,34 @@ export default {
           icon: 'success',
           title: '成功加入購物車'
         })
-        this.isLoading = false
+        isLoading.value = false
       } catch (error) {
-        this.isLoading = false
+        isLoading.value = false
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    getSelectProducts (category) {
-      this.selectCategory = category
-      if (this.selectCategory) {
-        const selectProducts = this.products.filter(
-          item => item.category === category
-        )
-        this.productsLength = selectProducts.length
-        this.selectProducts = selectProducts
-      } else {
-        this.productsLength = this.products.length
-        this.selectProducts = this.products
-      }
-    },
-    searchProducts () {
-      if (this.searchInput) {
-        this.selectProducts = this.selectProducts.filter(item =>
-          item.title.match(this.searchInput)
-        )
-        this.productsLength = this.selectProducts.length
-      } else {
-        this.selectProducts = this.products
-        this.productsLength = this.selectProducts.length
-        this.selectCategory = ''
-      }
     }
-  },
-  async created () {
-    await this.fetchProducts()
-    await this.getSelectProducts('')
+
+    const getCategories = computed(() => {
+      const categories = new Set()
+      products.value.forEach(item => categories.add(item.category))
+      return [...categories]
+    })
+
+    return {
+      isLoadingData,
+      selectCategory,
+      productsLength,
+      getCategories,
+      getSelectProducts,
+      searchInput,
+      searchProducts,
+      selectProducts,
+      isLoading,
+      addToCart
+    }
   },
   components: {
     Header,
