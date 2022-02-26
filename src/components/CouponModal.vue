@@ -1,6 +1,6 @@
 <template>
   <teleport to='#model'>
-<div class="bg-modal-bg-opacity flex fixed inset-0 justify-center items-center z-20" :class="{hidden: !modalToggle}" @click="$emit('closeCouponModal')">
+<div class="bg-modal-bg-opacity flex fixed inset-0 justify-center items-center z-20" :class="{hidden: !modalToggle}" @click.self="$emit('closeCouponModal')">
         <div class="bg-white max-w-3xl w-full p-10 rounded-md">
                   <h5 class="text-center text-gray-600 text-3xl mb-3">
             <span v-if="isNew">新增優惠卷</span>
