@@ -3,7 +3,7 @@
     <div
       class="bg-modal-bg-opacity flex fixed inset-0 justify-center items-center z-20"
       :class="{ hidden: !modalToggle }"
-      @click="$emit('closeOrderModal')"
+      @click.self="$emit('closeOrderModal')"
     >
       <div class="bg-white max-w-3xl w-full p-10 rounded-md">
         <h5 class="text-center text-3xl mb-5">

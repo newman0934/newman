@@ -73,39 +73,41 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Toast } from '@/utils/sweetAlert'
 import { HalfCircleSpinner } from 'epic-spinners'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 export default {
-  data () {
-    return {
-      order: {
-        user: {}
-      },
-      orderId: '',
-      isLoading: false,
-      isLoadingData: false
-    }
-  },
-  methods: {
-    async fetchOrder () {
+  setup () {
+    const order = ref({
+      user: {}
+    })
+    const isLoading = ref(false)
+    const isLoadingData = ref(false)
+    const route = useRoute()
+    const orderId = ref(route.params.id)
+
+    const fetchOrder = async () => {
       try {
-        this.isLoadingData = true
-        const { data } = await orderAPI.getOrder(this.orderId)
+        isLoadingData.value = true
+        const { data } = await orderAPI.getOrder(orderId.value)
         if (!data.success) {
           throw new Error('取得訂單失敗')
         }
-        this.order = data.order
-        this.isLoadingData = false
+        order.value = data.order
+        isLoadingData.value = false
       } catch (error) {
-        this.isLoadingData = false
+        isLoadingData.value = false
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async payOrder () {
+    }
+    fetchOrder()
+
+    const payOrder = async () => {
       try {
-        this.isLoading = true
-        const { data } = await orderAPI.payOrder(this.orderId)
+        isLoading.value = true
+        const { data } = await orderAPI.payOrder(orderId.value)
         if (!data.success) {
           throw new Error('付款失敗')
         }
@@ -113,20 +115,22 @@ export default {
           icon: 'success',
           title: '付款成功'
         })
-        this.isLoading = false
-        this.fetchOrder()
+        isLoading.value = false
+        fetchOrder()
       } catch (error) {
-        this.isLoading = false
+        isLoading.value = false
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
     }
-  },
-  created () {
-    this.orderId = this.$route.params.id
-    this.fetchOrder()
+    return {
+      order,
+      isLoading,
+      isLoadingData,
+      payOrder
+    }
   },
   components: {
     Header,

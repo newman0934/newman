@@ -1,6 +1,6 @@
 <template>
 <teleport to='#model'>
-    <div class="bg-modal-bg-opacity fixed flex inset-0 justify-center items-center z-20 transition duration-1000" :class="{hidden:!modalToggle}" @click="$emit('closeDelModal')">
+    <div class="bg-modal-bg-opacity fixed flex inset-0 justify-center items-center z-20 transition duration-1000" :class="{hidden:!modalToggle}" @click.self="$emit('closeDelModal')">
       <div class="bg-white max-w-3xl w-full p-10 rounded-md">
                   <h5 class="text-center text-3xl mb-5">
             <span>刪除 {{ item.title }}</span>

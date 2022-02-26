@@ -70,14 +70,14 @@
             <td class="text-right">{{ cart.total }}</td>
           </tr>
           <tr v-if="cart.final_total !== cart.total">
-            <td colspan="3" class="text-end text-primary">折扣價</td>
-            <td class="text-end text-primary">{{ cart.final_total }}</td>
+            <td colspan="3" class="text-right text-primary">折扣價</td>
+            <td class="text-right text-primary">{{ cart.final_total }}</td>
           </tr>
         </tfoot>
       </table>
       </div>
       <div class="flex justify-end items-center mt-10">
-        <input type="text" class="border-gray-200 rounded-l-lg" v-model="coupon_code" placeholder="請輸入優惠碼" />
+        <input type="text" class="border-gray-200 rounded-l-lg" v-model="couponCode" placeholder="請輸入優惠碼" />
         <div class="">
           <button class="rounded-r-lg border-primary border-[1px] px-2 py-2 text-primary hover:text-white hover:bg-primary" type="button" @click="addCouponCode" :disabled="isLoading">套用優惠碼</button>
         </div>
@@ -166,108 +166,49 @@ import couponAPI from '../apis/coupons'
 import { Toast } from '../utils/sweetAlert'
 import { HalfCircleSpinner } from 'epic-spinners'
 import { TrashIcon } from '@heroicons/vue/outline'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
-  data () {
-    return {
-      cart: {},
-      order: {
-        user: {
-          email: '',
-          name: '',
-          tel: '',
-          address: ''
-        },
-        message: ''
+  setup () {
+    const cart = ref({})
+    const order = ref({
+      user: {
+        email: '',
+        name: '',
+        tel: '',
+        address: ''
       },
-      coupon_code: '',
-      hasProduct: false,
-      isLoading: false,
-      isLoadingData: false
-    }
-  },
-  methods: {
-    async fetchCarts () {
+      message: ''
+    })
+    const couponCode = ref('')
+    const hasProduct = ref(false)
+    const isLoading = ref(false)
+    const isLoadingData = ref(false)
+    const form = ref(null)
+    const router = useRouter()
+    const fetchCarts = async () => {
       try {
-        this.isLoadingData = true
+        isLoadingData.value = true
         const { data } = await cartAPI.getCart()
         if (!data.success) {
           throw new Error('取得購物車失敗')
         }
-        this.cart = data.data
-        this.hasProduct = !!data?.data?.carts[0]?.id
-        this.isLoadingData = false
+        cart.value = data.data
+        hasProduct.value = !!data?.data?.carts[0]?.id
+        isLoadingData.value = false
       } catch (error) {
-        this.isLoadingData = false
+        isLoadingData.value = false
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async addOder () {
+    }
+    fetchCarts()
+
+    const updateCartQty = async (item) => {
       try {
-        this.isLoading = true
-        const order = this.order
-        const { data } = await orderAPI.postOder(order)
-        if (!data.success) {
-          throw new Error('送出訂單失敗')
-        }
-        this.$refs.form.resetForm()
-        this.isLoading = false
-        this.$router.push(`/checkout/${data.orderId}`)
-      } catch (error) {
-        this.isLoading = false
-        Toast.fire({
-          icon: 'error',
-          title: error.message
-        })
-      }
-    },
-    async deleteCarts () {
-      try {
-        this.isLoading = true
-        const { data } = await cartAPI.deleteCarts()
-        if (!data.success) {
-          throw new Error('刪除購物車失敗')
-        }
-        Toast.fire({
-          icon: 'success',
-          title: '刪除購物車成功'
-        })
-        this.isLoading = false
-        this.fetchCarts()
-      } catch (error) {
-        this.isLoading = false
-        Toast.fire({
-          icon: 'error',
-          title: error.message
-        })
-      }
-    },
-    async deleteCartItem (id) {
-      try {
-        this.isLoading = true
-        const { data } = await cartAPI.deleteCart(id)
-        if (!data.success) {
-          throw new Error('刪除購物車品項失敗')
-        }
-        Toast.fire({
-          icon: 'success',
-          title: '刪除商品成功'
-        })
-        this.isLoading = false
-        this.fetchCarts()
-      } catch (error) {
-        this.isLoading = false
-        Toast.fire({
-          icon: 'error',
-          title: error.message
-        })
-      }
-    },
-    async updateCartQty (item) {
-      try {
-        this.isLoading = true
+        isLoading.value = true
         const cartItem = {
           product_id: item.product_id,
           qty: item.qty
@@ -276,36 +217,111 @@ export default {
         if (!data.success) {
           throw new Error('更改購物車商品數量失敗')
         }
-        this.isLoading = false
-        this.fetchCarts()
+        isLoading.value = false
+        fetchCarts()
       } catch (error) {
-        this.isLoading = false
-        Toast.fire({
-          icon: 'error',
-          title: error.message
-        })
-      }
-    },
-    async addCouponCode () {
-      try {
-        this.isLoading = true
-        const { data } = await couponAPI.postCoupon({ code: this.coupon_code })
-        if (!data.success) {
-          throw new Error('加入優惠券失敗')
-        }
-        this.isLoading = false
-        this.fetchCarts()
-      } catch (error) {
-        this.isLoading = false
+        isLoading.value = false
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
     }
-  },
-  created () {
-    this.fetchCarts()
+
+    const addCouponCode = async () => {
+      try {
+        isLoading.value = true
+        const { data } = await couponAPI.postCoupon({ code: couponCode.value })
+        console.log(data)
+        if (!data.success) {
+          throw new Error('加入優惠券失敗')
+        }
+        isLoading.value = false
+        fetchCarts()
+      } catch (error) {
+        isLoading.value = false
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
+      }
+    }
+
+    const deleteCarts = async () => {
+      try {
+        isLoading.value = true
+        const { data } = await cartAPI.deleteCarts()
+        if (!data.success) {
+          throw new Error('刪除購物車失敗')
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '刪除購物車成功'
+        })
+        isLoading.value = false
+        fetchCarts()
+      } catch (error) {
+        isLoading.value = false
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
+      }
+    }
+    const deleteCartItem = async (id) => {
+      try {
+        isLoading.value = true
+        const { data } = await cartAPI.deleteCart(id)
+        if (!data.success) {
+          throw new Error('刪除購物車品項失敗')
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '刪除商品成功'
+        })
+        isLoading.value = false
+        fetchCarts()
+      } catch (error) {
+        isLoading.value = false
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
+      }
+    }
+
+    const addOder = async () => {
+      try {
+        isLoading.value = true
+        const { data } = await orderAPI.postOder(order.value)
+        if (!data.success) {
+          throw new Error('送出訂單失敗')
+        }
+        form.value.resetForm()
+        isLoading.value = false
+        router.push(`/checkout/${data.orderId}`)
+      } catch (error) {
+        isLoading.value = false
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
+      }
+    }
+    return {
+      cart,
+      order,
+      couponCode,
+      hasProduct,
+      isLoading,
+      isLoadingData,
+      addCouponCode,
+      deleteCarts,
+      deleteCartItem,
+      updateCartQty,
+      addOder,
+      form
+    }
   },
   components: {
     Header,
@@ -315,11 +331,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-// .coupon-input-group {
-//   width: 25%;
-//   @include mobile{
-//     width: 100%;
-//   }
-// }
-</style>
