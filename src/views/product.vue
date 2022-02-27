@@ -79,41 +79,83 @@ import SwiperCore, { Pagination, Navigation } from 'swiper/core'
 import 'swiper/swiper.scss'
 import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 SwiperCore.use([Pagination, Navigation])
 
 export default {
-  data () {
-    return {
-      product: {},
-      qty: 1,
-      isLoading: false,
-      isLoadingData: false,
-      products: [],
-      randomProducts: [],
-      swiperView: 3
+  setup () {
+    const product = ref({})
+    const qty = ref(1)
+    const isLoading = ref(false)
+    const isLoadingData = ref(false)
+    const products = ref([])
+    const randomProducts = ref([])
+    const swiperView = ref(3)
+    const route = useRoute()
+    const id = route.params.id
+
+    if (/Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      swiperView.value = 1
+    } else {
+      swiperView.value = 3
     }
-  },
-  methods: {
-    async fetchProduct (id) {
+
+    const fetchProduct = async (id) => {
       try {
-        this.isLoadingData = true
+        isLoadingData.value = true
         const { data } = await productAPI.getProduct({ id })
         if (!data.success) {
           throw new Error('獲取商品資料失敗')
         }
-        this.product = data.product
-        this.isLoadingData = false
+        product.value = data.product
+        isLoadingData.value = false
       } catch (error) {
-        this.isLoadingData = false
+        isLoadingData.value = false
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async addToCart (id, qty = 1) {
+    }
+    fetchProduct(id)
+
+    const getRandomNumber = (max) => {
+      return Math.floor(Math.random() * max)
+    }
+
+    const getRandomProducts = () => {
+      const maxSize = products.value.length > 4 ? products.value.length : 4
+      const arraySet = new Set([])
+      for (let index = 0; index < maxSize; index++) {
+        const num = getRandomNumber(products.value.length)
+        arraySet.add(num)
+      }
+      arraySet.forEach(i => {
+        randomProducts.value.push(products.value[i])
+      })
+    }
+
+    const fetchProducts = async () => {
       try {
-        this.isLoading = true
+        const { data } = await productAPI.getProducts()
+        if (!data.success) {
+          throw new Error('取得商品列表失敗')
+        }
+        products.value = data.products
+        getRandomProducts()
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: error.message
+        })
+      }
+    }
+    fetchProducts()
+
+    const addToCart = async (id, qty = 1) => {
+      try {
+        isLoading.value = true
         const cartItem = {
           product_id: id,
           qty
@@ -126,54 +168,25 @@ export default {
           icon: 'success',
           title: '加入購物車成功'
         })
-        this.isLoading = false
+        isLoading.value = false
       } catch (error) {
-        this.isLoading = false
+        isLoading.value = false
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async fetchProducts () {
-      try {
-        const { data } = await productAPI.getProducts()
-        if (!data.success) {
-          throw new Error('取得商品列表失敗')
-        }
-        this.products = data.products
-      } catch (error) {
-        Toast.fire({
-          icon: 'error',
-          title: error.message
-        })
-      }
-    },
-    getRandomNumber (max) {
-      return Math.floor(Math.random() * max)
-    },
-    getRandomProducts () {
-      const maxSize = this.products.length > 4 ? this.products.length : 4
-      const arraySet = new Set([])
-      for (let index = 0; index < maxSize; index++) {
-        const num = this.getRandomNumber(this.products.length)
-        arraySet.add(num)
-      }
-      arraySet.forEach(i => {
-        this.randomProducts.push(this.products[i])
-      })
     }
-  },
-  async created () {
-    const { id } = this.$route.params
-    await this.fetchProduct(id)
-    await this.fetchProducts()
-    await this.getRandomProducts()
 
-    if (/Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      this.swiperView = 1
-    } else {
-      this.swiperView = 3
+    return {
+      product,
+      qty,
+      isLoading,
+      isLoadingData,
+      products,
+      randomProducts,
+      swiperView,
+      addToCart
     }
   },
   components: {
