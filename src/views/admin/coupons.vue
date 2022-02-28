@@ -37,7 +37,7 @@
     </table>
     </div>
     <Pagination :pages="pagination" @emit-pages="fetchCoupons"></Pagination>
-    <Couponmodal :coupon="tempCoupon" :is-new="isNew" :couponModalOpen="couponModalOpen" @update-coupon="updateCoupon" @closeCouponModal="closeCouponModal"></Couponmodal>
+    <Couponmodal :coupon="tempCoupon" :is-new="isNew" :couponModalOpen="couponModalOpen" @updateCoupon="updateCoupon" @closeCouponModal="closeCouponModal"></Couponmodal>
     <DelModal :item="tempCoupon" :delModalOpen="delModalOpen" @delItem="deleteCoupon" @closeDelModal="closeDelModal"></DelModal>
 
   </div>
@@ -48,41 +48,41 @@ import Couponmodal from '@/components/CouponModal'
 import DelModal from '@/components/DelModal'
 import Pagination from '@/components/Pagination'
 import { Toast } from '@/utils/sweetAlert'
+import { ref } from 'vue'
 export default {
-  data () {
-    return {
-      coupons: [],
-      pagination: {},
-      tempCoupon: {
-        title: '',
-        is_enabled: 0,
-        percent: 100,
-        code: ''
-      },
-      isNew: false,
-      couponModalOpen: false,
-      delModalOpen: false
-    }
-  },
-  methods: {
-    async fetchCoupons (page = 1) {
+  setup () {
+    const coupons = ref([])
+    const pagination = ref({})
+    const tempCoupon = ref({
+      title: '',
+      is_enabled: 0,
+      percent: 100,
+      code: ''
+    })
+    const isNew = ref(false)
+    const couponModalOpen = ref(false)
+    const delModalOpen = ref(false)
+
+    const fetchCoupons = async (page = 1) => {
       try {
         const { data } = await adminCouponAPI.getAdminCoupons(page)
         if (!data.success) {
           throw new Error('取得優惠券列表失敗')
         }
-        this.coupons = data.coupons
-        this.pagination = data.pagination
+        coupons.value = data.coupons
+        pagination.value = data.pagination
       } catch (error) {
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async updateCoupon (tempCoupon) {
+    }
+    fetchCoupons()
+
+    const updateCoupon = async (tempCoupon) => {
       try {
-        if (this.isNew) {
+        if (isNew.value) {
           const { data } = await adminCouponAPI.postAdminCoupon(tempCoupon)
           if (!data.success) {
             throw new Error('新增優惠券失敗')
@@ -91,10 +91,10 @@ export default {
             icon: 'success',
             title: '新增優惠券成功'
           })
-          this.fetchCoupons()
-          this.couponModalOpen = false
+          fetchCoupons()
+          couponModalOpen.value = false
         } else {
-          const { data } = await adminCouponAPI.putAdminCoupon(this.tempCoupon.id, this.tempCoupon)
+          const { data } = await adminCouponAPI.putAdminCoupon(tempCoupon.id, tempCoupon)
           if (!data.success) {
             throw new Error('更改優惠券失敗')
           }
@@ -102,8 +102,8 @@ export default {
             icon: 'success',
             title: '修改優惠券成功'
           })
-          this.fetchCoupons()
-          this.couponModalOpen = false
+          fetchCoupons()
+          couponModalOpen.value = false
         }
       } catch (error) {
         Toast.fire({
@@ -111,10 +111,11 @@ export default {
           title: error.message
         })
       }
-    },
-    async deleteCoupon () {
+    }
+
+    const deleteCoupon = async () => {
       try {
-        const { data } = await adminCouponAPI.deleteAdminCoupon(this.tempCoupon.id)
+        const { data } = await adminCouponAPI.deleteAdminCoupon(tempCoupon.value.id)
         if (!data.success) {
           throw new Error('刪除優惠券失敗')
         }
@@ -122,40 +123,56 @@ export default {
           icon: 'success',
           title: '刪除優惠券成功'
         })
-        this.fetchCoupons()
-        this.delModalOpen = false
+        fetchCoupons()
+        delModalOpen.value = false
       } catch (error) {
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    openCouponModal (isNew, item) {
-      this.isNew = isNew
-      if (this.isNew) {
-        this.tempCoupon = {
+    }
+
+    const openCouponModal = (modalStatus, item) => {
+      isNew.value = modalStatus
+      if (isNew.value) {
+        tempCoupon.value = {
           due_date: new Date().getTime() / 1000,
           is_enabled: 0
         }
       } else {
-        this.tempCoupon = { ...item }
+        tempCoupon.value = { ...item }
       }
-      this.couponModalOpen = true
-    },
-    openDelCouponModal (item) {
-      this.tempCoupon = { ...item }
-      this.delModalOpen = true
-    },
-    closeDelModal () {
-      this.delModalOpen = false
-    },
-    closeCouponModal () {
-      this.couponModalOpen = false
+      couponModalOpen.value = true
     }
-  },
-  created () {
-    this.fetchCoupons()
+
+    const openDelCouponModal = (item) => {
+      tempCoupon.value = { ...item }
+      console.log(tempCoupon.value)
+      delModalOpen.value = true
+    }
+    const closeDelModal = () => {
+      delModalOpen.value = false
+    }
+    const closeCouponModal = () => {
+      couponModalOpen.value = false
+    }
+
+    return {
+      coupons,
+      pagination,
+      tempCoupon,
+      isNew,
+      couponModalOpen,
+      delModalOpen,
+      updateCoupon,
+      deleteCoupon,
+      openDelCouponModal,
+      openCouponModal,
+      closeDelModal,
+      closeCouponModal,
+      fetchCoupons
+    }
   },
   components: {
     Couponmodal,

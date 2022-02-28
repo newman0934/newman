@@ -29,7 +29,7 @@
           </div>
           <div class="mb-3">
             <label class="block text-gray-600 mb-2" for="due_date">到期日</label>
-            <input type="date" class="w-full border-gray-400 rounded-md mb-2" id="due_date" v-model="due_date" />
+            <input type="date" class="w-full border-gray-400 rounded-md mb-2" id="due_date" v-model="dueDate" />
           </div>
           <div class="mb-3">
             <label class="block text-gray-600 mb-2" for="price">折扣百分比</label>
@@ -61,7 +61,7 @@
           <button
             type="button"
             class="border-[1px] rounded-md border-red-600 text-red-600 px-3 py-2 hover:bg-red-600 hover:text-white"
-            @click="$emit('update-coupon', tempCoupon)"
+            @click="$emit('updateCoupon', tempCoupon)"
           >更新優惠券</button>
         </div>
       </div>
@@ -69,6 +69,7 @@
   </teleport>
 </template>
 <script>
+import { ref, toRefs, watch } from 'vue'
 export default {
   props: {
     coupon: {
@@ -86,25 +87,32 @@ export default {
       default: false
     }
   },
-  data () {
-    return {
-      tempCoupon: {},
-      due_date: '',
-      modalToggle: false
-    }
-  },
-  watch: {
-    coupon () {
-      this.tempCoupon = this.coupon
-      const dateAndTime = new Date(this.tempCoupon.due_date * 1000)
+  emits: ['updateCoupon', 'closeCouponModal'],
+  setup (props) {
+    const { coupon, couponModalOpen } = toRefs(props)
+    const tempCoupon = ref({})
+    const dueDate = ref('')
+    const modalToggle = ref(false)
+
+    watch(coupon, () => {
+      tempCoupon.value = coupon.value
+      const dateAndTime = new Date(tempCoupon.value.due_date * 1000)
         .toISOString().split('T');
-      [this.due_date] = dateAndTime
-    },
-    due_date () {
-      this.tempCoupon.due_date = Math.floor(new Date(this.due_date) / 1000)
-    },
-    couponModalOpen () {
-      this.modalToggle = this.couponModalOpen
+      [dueDate.value] = dateAndTime
+    })
+
+    watch(dueDate, () => {
+      tempCoupon.value.due_date = Math.floor(new Date(dueDate.value) / 1000)
+    })
+
+    watch(couponModalOpen, () => {
+      modalToggle.value = couponModalOpen.value
+    })
+
+    return {
+      tempCoupon,
+      dueDate,
+      modalToggle
     }
   }
 }
