@@ -61,7 +61,7 @@ export default {
     const login = async () => {
       try {
         isLoading.value = true
-        if (!this.email || !this.email) {
+        if (!email.value || !email.value) {
           throw new Error('請輸入帳密')
         }
         const user = {
@@ -76,7 +76,7 @@ export default {
         isLoading.value = false
         router.replace('/admin')
       } catch (err) {
-        this.isLoading = false
+        isLoading.value = false
         Toast.fire({
           icon: 'error',
           title: err.message

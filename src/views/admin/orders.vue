@@ -91,7 +91,7 @@
     <OrderModal
       :order="tempOrder"
       :orderModalOpen="orderModalOpen"
-      @update-paid="updatePaid"
+      @updatePaid="updatePaid"
       @closeOrderModal="closeOrderModal"
     ></OrderModal>
   </div>
@@ -102,39 +102,126 @@ import DelModal from '@/components/DelModal.vue'
 import OrderModal from '@/components/OrderModal.vue'
 import Pagination from '@/components/Pagination.vue'
 import { Toast } from '@/utils/sweetAlert'
+import { ref } from 'vue'
 
 export default {
   data () {
     return {
-      orders: {},
-      isNew: false,
-      pagination: {},
-      isLoading: false,
-      tempOrder: {},
-      orderModalOpen: false,
-      delModalOpen: false
+      // orders: {},
+      // isNew: false,
+      // pagination: {},
+      // isLoading: false,
+      // tempOrder: {},
+      // orderModalOpen: false,
+      // delModalOpen: false
     }
   },
   methods: {
-    async fetchOrders (page) {
+    // async fetchOrders (page) {
+    //   try {
+    //     const { data } = await adminOrdersAPI.getAdminOrders(page)
+    //     if (!data.success) {
+    //       throw new Error('取得訂單列表失敗')
+    //     }
+    //     this.orders = data.orders
+    //     this.pagination = data.pagination
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: 'error',
+    //       title: error.message
+    //     })
+    //   }
+    // },
+    // async delOrder () {
+    //   try {
+    //     const { data } = await adminOrdersAPI.deleteAdminOrder(
+    //       this.tempOrder.id
+    //     )
+    //     if (!data.success) {
+    //       throw new Error('刪除訂單失敗')
+    //     }
+    //     Toast.fire({
+    //       icon: 'success',
+    //       title: '刪除訂單成功'
+    //     })
+    //     this.delModalOpen = false
+    //     this.fetchOrders()
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: 'error',
+    //       title: error.message
+    //     })
+    //   }
+    // },
+    // async updatePaid (item) {
+    //   try {
+    //     this.isLoading = true
+    //     const paid = {
+    //       is_paid: item.is_paid
+    //     }
+    //     const { data } = await adminOrdersAPI.updatePaid(item.id, paid)
+    //     if (!data.success) {
+    //       throw new Error('修改訂單失敗')
+    //     }
+    //     Toast.fire({
+    //       icon: 'success',
+    //       title: '修改訂單成功'
+    //     })
+    //     this.isLoading = false
+    //     this.orderModalOpen = false
+    //     this.fetchOrders()
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: 'error',
+    //       title: error.message
+    //     })
+    //   }
+    // },
+    // openDelOrderModal (item) {
+    //   this.tempOrder = { ...item }
+    //   this.delModalOpen = true
+    // },
+    // openModal (item) {
+    //   this.tempOrder = { ...item }
+    //   this.orderModalOpen = true
+    // },
+    // closeDelModal () {
+    //   this.delModalOpen = false
+    // },
+    // closeOrderModal () {
+    //   this.orderModalOpen = false
+    // }
+  },
+  setup () {
+    const orders = ref({})
+    const isNew = ref(false)
+    const pagination = ref({})
+    const isLoading = ref(false)
+    const tempOrder = ref({})
+    const orderModalOpen = ref(false)
+    const delModalOpen = ref(false)
+
+    const fetchOrders = async (page) => {
       try {
         const { data } = await adminOrdersAPI.getAdminOrders(page)
         if (!data.success) {
           throw new Error('取得訂單列表失敗')
         }
-        this.orders = data.orders
-        this.pagination = data.pagination
+        orders.value = data.orders
+        pagination.value = data.pagination
       } catch (error) {
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async delOrder () {
+    }
+    fetchOrders()
+
+    const delOrder = async () => {
       try {
         const { data } = await adminOrdersAPI.deleteAdminOrder(
-          this.tempOrder.id
+          tempOrder.value.id
         )
         if (!data.success) {
           throw new Error('刪除訂單失敗')
@@ -143,22 +230,23 @@ export default {
           icon: 'success',
           title: '刪除訂單成功'
         })
-        this.delModalOpen = false
-        this.fetchOrders()
+        delModalOpen.value = false
+        fetchOrders()
       } catch (error) {
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async updatePaid (item) {
+    }
+
+    const updatePaid = async (item) => {
       try {
-        this.isLoading = true
-        const paid = {
+        isLoading.value = true
+        const paid = ref({
           is_paid: item.is_paid
-        }
-        const { data } = await adminOrdersAPI.updatePaid(item.id, paid)
+        })
+        const { data } = await adminOrdersAPI.updatePaid(item.id, paid.value)
         if (!data.success) {
           throw new Error('修改訂單失敗')
         }
@@ -166,33 +254,49 @@ export default {
           icon: 'success',
           title: '修改訂單成功'
         })
-        this.isLoading = false
-        this.orderModalOpen = false
-        this.fetchOrders()
+        isLoading.value = false
+        orderModalOpen.value = false
+        fetchOrders()
       } catch (error) {
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    openDelOrderModal (item) {
-      this.tempOrder = { ...item }
-      this.delModalOpen = true
-    },
-    openModal (item) {
-      this.tempOrder = { ...item }
-      this.orderModalOpen = true
-    },
-    closeDelModal () {
-      this.delModalOpen = false
-    },
-    closeOrderModal () {
-      this.orderModalOpen = false
     }
-  },
-  created () {
-    this.fetchOrders()
+
+    const openDelOrderModal = (item) => {
+      tempOrder.value = { ...item }
+      delModalOpen.value = true
+    }
+    const openModal = (item) => {
+      tempOrder.value = { ...item }
+      orderModalOpen.value = true
+    }
+    const closeDelModal = () => {
+      delModalOpen.value = false
+    }
+    const closeOrderModal = () => {
+      orderModalOpen.value = false
+    }
+
+    return {
+      orders,
+      isNew,
+      pagination,
+      isLoading,
+      tempOrder,
+      orderModalOpen,
+      delModalOpen,
+      fetchOrders,
+      delOrder,
+      updatePaid,
+      openDelOrderModal,
+      openModal,
+      closeDelModal,
+      closeOrderModal
+
+    }
   },
   components: {
     Pagination,
