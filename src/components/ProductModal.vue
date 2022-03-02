@@ -1,5 +1,4 @@
 <template>
-
   <teleport to="#model">
       <div
       class="bg-modal-bg-opacity flex fixed inset-0 justify-center items-center z-20"
@@ -201,6 +200,7 @@
 </template>
 <script>
 import productAdminAPI from '@/apis/admin/products.js'
+import { ref, toRefs, watch } from 'vue'
 export default {
   props: {
     product: {
@@ -219,45 +219,54 @@ export default {
       default: false
     }
   },
-  data () {
-    return {
-      status: {},
-      modal: '',
-      tempProduct: {},
-      modalToggle: false
-    }
-  },
-  methods: {
-    async uploadFile () {
+  emits: ['update-product', 'closeProductModal'],
+  setup (props) {
+    const { product, productModalOpen } = toRefs(props)
+    const status = ref({})
+    const modal = ref('')
+    const tempProduct = ref({})
+    const modalToggle = ref(false)
+    const fileInput = ref(null)
+
+    const uploadFile = async () => {
       try {
-        const uploadedFile = this.$refs.fileInput.files[0]
+        console.log(fileInput)
+        const uploadedFile = fileInput.value.files[0]
         const formData = new FormData()
         formData.append('file-to-upload', uploadedFile)
-        this.status.fileUploading = true
+        status.value.fileUploading = true
         const { data } = await productAdminAPI.uploadFile(formData)
-        this.status.fileUploading = false
+        status.value.fileUploading = false
         if (!data.success) {
           throw new Error('上傳圖片失敗')
         }
-        this.tempProduct.imageUrl = data.imageUrl
-        this.$refs.fileInput.value = ''
+        tempProduct.value.imageUrl = data.imageUrl
+        fileInput.value = ''
       } catch (error) {
         window.alert(error.message)
       }
     }
-  },
-  watch: {
-    product () {
-      this.tempProduct = this.product
-      if (!this.tempProduct.imagesUrl) {
-        this.tempProduct.imagesUrl = []
+
+    watch(product, () => {
+      tempProduct.value = product.value
+      if (!tempProduct.value.imagesUrl) {
+        tempProduct.value.imagesUrl = []
       }
-      if (!this.tempProduct.imageUrl) {
-        this.tempProduct.imageUrl = ''
+      if (!tempProduct.value.imageUrl) {
+        tempProduct.value.imageUrl = ''
       }
-    },
-    productModalOpen () {
-      this.modalToggle = this.productModalOpen
+    })
+
+    watch(productModalOpen, () => {
+      modalToggle.value = productModalOpen.value
+    })
+
+    return {
+      status,
+      modal,
+      tempProduct,
+      modalToggle,
+      uploadFile
     }
   }
 }

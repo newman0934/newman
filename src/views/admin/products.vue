@@ -56,36 +56,137 @@ import Pagination from '@/components/Pagination'
 import DelModal from '@/components/DelModal'
 import ProductModal from '@/components/ProductModal'
 import { Toast } from '@/utils/sweetAlert'
+import { ref } from 'vue'
 export default {
   data () {
     return {
-      products: [],
-      pagination: {},
-      tempProduct: {},
-      isNew: false,
-      status: {
-        fileUploading: false
-      },
-      productModalOpen: false,
-      delModalOpen: false
+      // products: [],
+      // pagination: {},
+      // tempProduct: {},
+      // isNew: false,
+      // status: {
+      //   fileUploading: false
+      // },
+      // productModalOpen: false,
+      // delModalOpen: false
     }
   },
   methods: {
-    async fetchProducts (page = 1) {
+    // async fetchProducts (page = 1) {
+    //   try {
+    //     const { data } = await adminProductsAPI.getAdminProducts(page)
+    //     this.products = data.products
+    //     this.pagination = data.pagination
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: 'error',
+    //       title: error.message
+    //     })
+    //   }
+    // },
+    // async delProduct () {
+    //   try {
+    //     const { data } = await adminProductsAPI.deleteAdminProduct(this.tempProduct.id)
+    //     if (!data.success) {
+    //       throw new Error('刪除商品失敗')
+    //     }
+    //     Toast.fire({
+    //       icon: 'success',
+    //       title: '刪除商品成功'
+    //     })
+    //     this.delModalOpen = false
+    //     this.fetchProducts()
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: 'error',
+    //       title: error.message
+    //     })
+    //   }
+    // },
+    // async updateProduct (item) {
+    //   try {
+    //     this.tempProduct = item
+    //     if (this.isNew) {
+    //       const { data } = await adminProductsAPI.postAdminProduct(this.tempProduct)
+    //       console.log(data)
+    //       if (!data.success) {
+    //         throw new Error('新增商品失敗')
+    //       }
+    //       Toast.fire({
+    //         icon: 'success',
+    //         title: '新增商品成功'
+    //       })
+    //       this.productModalOpen = false
+    //       this.fetchProducts()
+    //     } else {
+    //       const { data } = await adminProductsAPI.putAdminProduct(this.tempProduct.id, this.tempProduct)
+    //       console.log(data)
+    //       if (!data.success) {
+    //         throw new Error('修改商品失敗')
+    //       }
+    //       Toast.fire({
+    //         icon: 'success',
+    //         title: '修改商品成功'
+    //       })
+    //       this.productModalOpen = false
+    //       this.fetchProducts()
+    //     }
+    //   } catch (error) {
+    //     Toast.fire({
+    //       icon: 'error',
+    //       title: error.message
+    //     })
+    //   }
+    // },
+    // openDelProductModal (item) {
+    //   this.tempProduct = { ...item }
+    //   this.delModalOpen = true
+    // },
+    // openProductModal (isNew, item) {
+    //   if (isNew) {
+    //     this.tempProduct = {}
+    //     this.isNew = true
+    //   } else {
+    //     this.tempProduct = { ...item }
+    //     this.isNew = false
+    //   }
+    //   this.productModalOpen = true
+    // },
+    // closeDelModal () {
+    //   this.delModalOpen = false
+    // },
+    // closeProductModal () {
+    //   this.productModalOpen = false
+    // }
+  },
+  setup () {
+    const products = ref([])
+    const pagination = ref({})
+    const tempProduct = ref({})
+    const isNew = ref(false)
+    const status = ref({
+      fileUploading: false
+    })
+    const productModalOpen = ref(false)
+    const delModalOpen = ref(false)
+
+    const fetchProducts = async (page = 1) => {
       try {
         const { data } = await adminProductsAPI.getAdminProducts(page)
-        this.products = data.products
-        this.pagination = data.pagination
+        products.value = data.products
+        pagination.value = data.pagination
       } catch (error) {
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async delProduct () {
+    }
+    fetchProducts()
+
+    const delProduct = async () => {
       try {
-        const { data } = await adminProductsAPI.deleteAdminProduct(this.tempProduct.id)
+        const { data } = await adminProductsAPI.deleteAdminProduct(tempProduct.value.id)
         if (!data.success) {
           throw new Error('刪除商品失敗')
         }
@@ -93,21 +194,21 @@ export default {
           icon: 'success',
           title: '刪除商品成功'
         })
-        this.delModalOpen = false
-        this.fetchProducts()
+        delModalOpen.value = false
+        fetchProducts()
       } catch (error) {
         Toast.fire({
           icon: 'error',
           title: error.message
         })
       }
-    },
-    async updateProduct (item) {
+    }
+
+    const updateProduct = async (item) => {
       try {
-        this.tempProduct = item
-        if (this.isNew) {
-          const { data } = await adminProductsAPI.postAdminProduct(this.tempProduct)
-          console.log(data)
+        tempProduct.value = item
+        if (isNew.value) {
+          const { data } = await adminProductsAPI.postAdminProduct(tempProduct.value)
           if (!data.success) {
             throw new Error('新增商品失敗')
           }
@@ -115,11 +216,10 @@ export default {
             icon: 'success',
             title: '新增商品成功'
           })
-          this.productModalOpen = false
-          this.fetchProducts()
+          productModalOpen.value = false
+          fetchProducts()
         } else {
-          const { data } = await adminProductsAPI.putAdminProduct(this.tempProduct.id, this.tempProduct)
-          console.log(data)
+          const { data } = await adminProductsAPI.putAdminProduct(tempProduct.value.id, tempProduct.value)
           if (!data.success) {
             throw new Error('修改商品失敗')
           }
@@ -127,8 +227,8 @@ export default {
             icon: 'success',
             title: '修改商品成功'
           })
-          this.productModalOpen = false
-          this.fetchProducts()
+          productModalOpen.value = false
+          fetchProducts()
         }
       } catch (error) {
         Toast.fire({
@@ -136,30 +236,45 @@ export default {
           title: error.message
         })
       }
-    },
-    openDelProductModal (item) {
-      this.tempProduct = { ...item }
-      this.delModalOpen = true
-    },
-    openProductModal (isNew, item) {
-      if (isNew) {
-        this.tempProduct = {}
-        this.isNew = true
-      } else {
-        this.tempProduct = { ...item }
-        this.isNew = false
-      }
-      this.productModalOpen = true
-    },
-    closeDelModal () {
-      this.delModalOpen = false
-    },
-    closeProductModal () {
-      this.productModalOpen = false
     }
-  },
-  created () {
-    this.fetchProducts()
+
+    const openDelProductModal = (item) => {
+      tempProduct.value = { ...item }
+      delModalOpen.value = true
+    }
+    const openProductModal = (modalStatus, item) => {
+      if (modalStatus) {
+        tempProduct.value = {}
+        isNew.value = true
+      } else {
+        tempProduct.value = { ...item }
+        isNew.value = false
+      }
+      productModalOpen.value = true
+    }
+    const closeDelModal = () => {
+      delModalOpen.value = false
+    }
+    const closeProductModal = () => {
+      productModalOpen.value = false
+    }
+
+    return {
+      products,
+      pagination,
+      tempProduct,
+      isNew,
+      status,
+      productModalOpen,
+      delModalOpen,
+      fetchProducts,
+      delProduct,
+      updateProduct,
+      openDelProductModal,
+      openProductModal,
+      closeDelModal,
+      closeProductModal
+    }
   },
   components: {
     Pagination,
