@@ -49,39 +49,46 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import loginAPI from '../apis/login'
 import { Toast } from '../utils/sweetAlert'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
-  data () {
-    return {
-      email: '',
-      password: '',
-      isLoading: false
-    }
-  },
-  methods: {
-    async login () {
+  setup () {
+    const email = ref('')
+    const password = ref('')
+    const isLoading = ref(false)
+    const router = useRouter()
+
+    const login = async () => {
       try {
-        this.isLoading = true
-        if (!this.email || !this.email) {
+        isLoading.value = true
+        if (!email.value || !email.value) {
           throw new Error('請輸入帳密')
         }
         const user = {
-          username: this.email,
-          password: this.password
+          username: email.value,
+          password: password.value
         }
         const { data } = await loginAPI.login(user)
         if (!data.success) {
           throw new Error('無法登入')
         }
         localStorage.setItem('token', data.token)
-        this.isLoading = false
-        this.$router.replace('/admin')
+        isLoading.value = false
+        router.replace('/admin')
       } catch (err) {
-        this.isLoading = false
+        isLoading.value = false
         Toast.fire({
           icon: 'error',
           title: err.message
         })
       }
+    }
+
+    return {
+      email,
+      password,
+      isLoading,
+      login
     }
   },
   components: {

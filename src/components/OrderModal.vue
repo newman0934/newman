@@ -105,7 +105,7 @@
           <button
             type="button"
             class="text-red-600 border-[1px] border-red-600 rounded-md px-3 py-2 hover:bg-red-600 hover:text-white"
-            @click="$emit('update-paid', tempOrder)"
+            @click="$emit('updatePaid', tempOrder)"
           >修改付款狀態</button>
         </div>
       </div>
@@ -113,6 +113,7 @@
   </teleport>
 </template>
 <script>
+import { ref, watch, toRefs } from 'vue'
 export default {
   props: {
     order: {
@@ -126,21 +127,28 @@ export default {
       default: false
     }
   },
-  data () {
+  emits: ['closeOrderModal', 'updatePaid'],
+  setup (props) {
+    const { order, orderModalOpen } = toRefs(props)
+    const status = ref({})
+    const modal = ref('')
+    const tempOrder = ref({})
+    const isPaid = ref(false)
+    const modalToggle = ref(false)
+
+    watch(order, () => {
+      tempOrder.value = order.value
+    })
+
+    watch(orderModalOpen, () => {
+      modalToggle.value = orderModalOpen.value
+    })
     return {
-      status: {},
-      modal: '',
-      tempOrder: {},
-      isPaid: false,
-      modalToggle: false
-    }
-  },
-  watch: {
-    order () {
-      this.tempOrder = this.order
-    },
-    orderModalOpen () {
-      this.modalToggle = this.orderModalOpen
+      status,
+      modal,
+      tempOrder,
+      isPaid,
+      modalToggle
     }
   }
 }
